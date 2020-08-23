@@ -181,6 +181,11 @@ export default class ReactForm extends React.Component {
     }
   }
 
+  handleChange(e) {
+    const {name, value} = e.target;
+    console.log(name,value);
+  }
+
   handleSubmit(e) {
     e.preventDefault();
 
@@ -190,7 +195,6 @@ export default class ReactForm extends React.Component {
       // Publish errors, if any.
       this.emitter.emit('formValidation', errors);
     }
-
     // Only submit if there are no errors.
     if (errors.length < 1) {
       const { onSubmit } = this.props;
@@ -298,7 +302,7 @@ export default class ReactForm extends React.Component {
       <div>
         <FormValidator emitter={this.emitter} />
         <div className='react-form-builder-form'>
-          <form encType='multipart/form-data' ref={c => this.form = c} action={this.props.form_action} onSubmit={this.handleSubmit.bind(this)} method={this.props.form_method}>
+          <form encType='multipart/form-data' ref={c => this.form = c} action={this.props.form_action} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} method={this.props.form_method}>
             { this.props.authenticity_token &&
               <div style={formTokenStyle}>
                 <input name='utf8' type='hidden' value='&#x2713;' />
