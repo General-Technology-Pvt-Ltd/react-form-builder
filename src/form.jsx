@@ -181,21 +181,56 @@ export default class ReactForm extends React.Component {
     }
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handelChange(event) {
+  event.preventDefault();
+  const name=event.target.name;
+  const value=event.target.value;
 
+  if(value === '0'){
+     console.log("Yes"+value);
+    return(
+    <>
+    <div><br></br>
+    Why did you choose yes?
+    <input type='text' placeholder="answer here..."></input>
+    </div>
+    </>
+    );
+  }else if(value === '1'){
+    console.log("No"+value);
+    return(
+      <>
+      <div><br></br>
+      Why did you choose No?
+      <input type='text' placeholder="answer here..."></input>
+      </div>
+      </>
+      );
+
+  }
+  //console.log(name+""+value);
+
+  }
+
+
+  handleSubmit(e) {
+  e.preventDefault();
     let errors = [];
     if (!this.props.skip_validations) {
       errors = this.validateForm();
       // Publish errors, if any.
       this.emitter.emit('formValidation', errors);
     }
-
+    /* const data = this._collectFormData(this.props.data);
+    console.log(data);
+    return; */
     // Only submit if there are no errors.
     if (errors.length < 1) {
       const { onSubmit } = this.props;
       if (onSubmit) {
         const data = this._collectFormData(this.props.data);
+       // console.log(data);
+        // return;
         onSubmit(data);
       } else {
         const $form = ReactDOM.findDOMNode(this.form);
@@ -298,7 +333,7 @@ export default class ReactForm extends React.Component {
       <div>
         <FormValidator emitter={this.emitter} />
         <div className='react-form-builder-form'>
-          <form encType='multipart/form-data' ref={c => this.form = c} action={this.props.form_action} onSubmit={this.handleSubmit.bind(this)} method={this.props.form_method}>
+          <form encType='multipart/form-data' ref={c => this.form = c} onChange={this.handelChange.bind(this)} action={this.props.form_action} onSubmit={this.handleSubmit.bind(this)} method={this.props.form_method}>
             { this.props.authenticity_token &&
               <div style={formTokenStyle}>
                 <input name='utf8' type='hidden' value='&#x2713;' />
