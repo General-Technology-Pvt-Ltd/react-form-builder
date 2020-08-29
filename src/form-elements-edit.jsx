@@ -208,8 +208,8 @@ export default class FormElementsEdit extends React.Component {
               <div className="form-group">
                 <label className="" htmlFor="is-read-only">
                   Name
-                </label>
-                <input id="is-read-only" className="form-control" type="text" value={this_field_name} onChange={this.editElementProp.bind(this, 'field_name', 'value')} />
+                </label>&nbsp;&nbsp;
+                <input id="is-read-only" placeholder="Enter Your Text" className="form-control-input" type="text"  value={this_field_name} onChange={this.editElementProp.bind(this, 'field_name', 'value')} />
               </div>
             }
             <div className="custom-control custom-checkbox">
@@ -226,11 +226,11 @@ export default class FormElementsEdit extends React.Component {
                 </label>
               </div>
             }
-            { this.props.element.hasOwnProperty('visibleCondition') &&
+             { this.props.element.hasOwnProperty('visibleCondition') &&
               <div className="custom-control custom-checkbox">
-                <input id="is-read-only" className="custom-control-input" type="text" value={this_visible_condition} onChange={this.editElementProp.bind(this, 'visibleCondition', 'value')} />
-                <label className="custom-control-label" htmlFor="is-read-only">
-                  Conditional Field
+              <input id="is-read-only" className="custom-control-input" type="text"  value={this_visible_condition} onChange={this.editElementProp.bind(this, 'visibleCondition', 'value')} />
+              <label className="custom-control-label" htmlFor="is-read-only">
+                 Conditional Field
                 </label>
               </div>
             }
