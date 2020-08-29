@@ -114,7 +114,7 @@ export default class FormElementsEdit extends React.Component {
     const this_checked_center = this.props.element.hasOwnProperty('center') ? this.props.element.center : false;
     const this_checked_page_break = this.props.element.hasOwnProperty('pageBreakBefore') ? this.props.element.pageBreakBefore : false;
     const this_checked_alternate_form = this.props.element.hasOwnProperty('alternateForm') ? this.props.element.alternateForm : false;
-    const this_visible_condition = this.props.element.hasOwnProperty('visibleCondition') ? this.props.element.visibleCondition : false;
+    const this_conditional_rule = this.props.element.hasOwnProperty('conditional_rule') ? this.props.element.conditionalRule : '';
     const this_field_name = this.props.element.hasOwnProperty('field_name') ? this.props.element.field_name : false;
 
     const {
@@ -206,12 +206,20 @@ export default class FormElementsEdit extends React.Component {
             <br />
             { this.props.element.hasOwnProperty('field_name') &&
               <div className="form-group">
-                <label className="" htmlFor="is-read-only">
+                <label className="">
                   Name
-                </label>&nbsp;&nbsp;
-                <input id="is-read-only" placeholder="Enter Your Text" className="form-control-input" type="text"  value={this_field_name} onChange={this.editElementProp.bind(this, 'field_name', 'value')} />
+                </label>
+                <input id="is-read-only" placeholder="Enter Your Text" className="form-control" type="text"  value={this_field_name} onChange={this.editElementProp.bind(this, 'field_name', 'value')} />
               </div>
             }
+            { 
+             <div className="form-group">
+              <label className="">
+                Conditional Rule
+              </label>
+              <input id="is-read-only" placeholder="eg: data.type == '1'? 1: 0" className="form-control" type="text"  value={this_conditional_rule} onChange={this.editElementProp.bind(this, 'conditional_rule', 'value')} />
+            </div>
+           }
             <div className="custom-control custom-checkbox">
               <input id="is-required" className="custom-control-input" type="checkbox" checked={this_checked} value={true} onChange={this.editElementProp.bind(this, 'required', 'checked')} />
               <label className="custom-control-label" htmlFor="is-required">
@@ -223,14 +231,6 @@ export default class FormElementsEdit extends React.Component {
                 <input id="is-read-only" className="custom-control-input" type="checkbox" checked={this_read_only} value={true} onChange={this.editElementProp.bind(this, 'readOnly', 'checked')} />
                 <label className="custom-control-label" htmlFor="is-read-only">
                   Read only
-                </label>
-              </div>
-            }
-             { this.props.element.hasOwnProperty('visibleCondition') &&
-              <div className="custom-control custom-checkbox">
-              <input id="is-read-only" className="custom-control-input" type="text"  value={this_visible_condition} onChange={this.editElementProp.bind(this, 'visibleCondition', 'value')} />
-              <label className="custom-control-label" htmlFor="is-read-only">
-                 Conditional Field
                 </label>
               </div>
             }
