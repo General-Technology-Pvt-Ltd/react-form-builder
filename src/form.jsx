@@ -256,7 +256,13 @@ export default class ReactForm extends React.Component {
       // Publish errors, if any.
       this.emitter.emit('formValidation', errors);
     }
+<<<<<<< HEAD
 
+=======
+    /* const data = this._collectFormData(this.props.data);
+     console.log(data);
+     return; */
+>>>>>>> 25def8f758539471e97f80fd11e6bd737ad3560f
     // Only submit if there are no errors.
     if (errors.length < 1) {
       const { onSubmit } = this.props;
@@ -363,9 +369,23 @@ export default class ReactForm extends React.Component {
     return (
       <div>
         <FormValidator emitter={this.emitter} />
+<<<<<<< HEAD
         <div className='react-form-builder-form'>
           <form encType='multipart/form-data' ref={c => this.form = c} onChange={this.handelChange.bind(this)} action={this.props.form_action} onSubmit={this.handleSubmit.bind(this)} method={this.props.form_method}>
             { this.props.authenticity_token &&
+=======
+        <div className="react-form-builder-form">
+          <form
+            encType="multipart/form-data"
+            ref={(c) => (this.form = c)}
+            onChange={this.handelChange.bind(this)}
+            action={this.props.form_action}
+            onSubmit={this.handleSubmit.bind(this)}
+            method={this.props.form_method}
+          >
+            {/* <label>this is for test preivew</label> */}
+            {this.props.authenticity_token && (
+>>>>>>> 25def8f758539471e97f80fd11e6bd737ad3560f
               <div style={formTokenStyle}>
                 <input name='utf8' type='hidden' value='&#x2713;' />
                 <input name='authenticity_token' type='hidden' value={this.props.authenticity_token} />
