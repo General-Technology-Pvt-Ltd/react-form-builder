@@ -45,8 +45,6 @@ const store = new Store({
     },
 
     save(data) {
-     /*  console.log(data);
-      return; */
       if (_onPost) {
         _onPost({ task_data: data });
       } else if (_saveUrl) {

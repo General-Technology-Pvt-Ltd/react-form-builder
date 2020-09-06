@@ -22,8 +22,6 @@ class ReactFormBuilder extends React.Component {
   }
 
   editModeOn(data, e) {
-    console.log(data);
-    //return;
     e.preventDefault();
     e.stopPropagation();
     if (this.state.editMode) {
