@@ -162,15 +162,8 @@ export default class FormElementsEdit extends React.Component {
       ? this.props.element.conditonalRule
       : "";
 
-    // console.log("conditonalRule", this_conditonal_rule);
-    // console.log("conditonalRule", this.props.element);
-
-    const this_field_name = this.props.element.hasOwnProperty("fieldName")
-      ? this.props.element.fieldName
-       : '';
-
-    const this_conditional_checked = this.props.element.hasOwnProperty("conditionalChecked")
-      ? this.props.element.conditionalChecked
+    const this_visibility_checked = this.props.element.hasOwnProperty("visibilityChecked")
+      ? this.props.element.visibilityChecked
       : false;
 
     const {
@@ -179,7 +172,7 @@ export default class FormElementsEdit extends React.Component {
       canHaveDisplayHorizontal,
       canHaveOptionCorrect,
       canHaveOptionValue,
-      canHaveConditionalRule,
+      canHaveVisibilityRule,
     } = this.props.element;
 
     const this_files = this.props.files.length ? this.props.files : [];
@@ -338,29 +331,27 @@ export default class FormElementsEdit extends React.Component {
             />
             <br />
 
-            {/* my code start */}
-
-
+            {/* shubham code start */}
             {(
               <div className="custom-control custom-checkbox">
                 <input
-                  id="is-conditional-checked"
+                  id="is-visibility-checked"
                   className="custom-control-input"
                   type="checkbox"
-                  checked={this_conditional_checked}
+                  checked={this_visibility_checked}
                   value={true}
                   onChange={this.editElementProp.bind(
                     this,
-                    "conditionalChecked",
+                    "visibilityChecked",
                     "checked"
                   )}
                 />
-                <label className="custom-control-label" htmlFor="is-conditional-checked">
-                  Conditional Check
+                <label className="custom-control-label" htmlFor="is-visibility-checked">
+                  Visible
                 </label>
               </div>
             )}
-            {this.props.element.hasOwnProperty("conditionalChecked") && this.props.element.conditionalChecked == true ?
+            {
               <div className="form-group">
                 <label className="" htmlFor="is-conditional-rule">Conditional Rule</label>
                 <input
@@ -375,29 +366,9 @@ export default class FormElementsEdit extends React.Component {
                     "value"
                   )}
                 />
-              </div> : null
+              </div>
             }
-            {this.props.element.hasOwnProperty("conditionalChecked") && this.props.element.conditionalChecked == true ?
-
-              <div className="form-group">
-                <label className="">Title</label>
-                <input
-                  id="this is the input field"
-                  placeholder="Enter Your Text"
-                  className="form-control"
-                  type="text"
-                  value={this_field_name}
-                  // value={this.props.element.fieldName}
-                  onChange={this.editElementProp.bind(
-                    this,
-                    "fieldName",
-                    "value"
-                  )}
-                />
-              </div>:null
-            }
-
-            {/* my code end */}
+            {/* shubham code end */}
             <div className="custom-control custom-checkbox">
               <input
                 id="is-required"
