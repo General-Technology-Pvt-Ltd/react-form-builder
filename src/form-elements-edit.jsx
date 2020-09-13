@@ -161,11 +161,6 @@ export default class FormElementsEdit extends React.Component {
     )
       ? this.props.element.conditonalRule
       : "";
-
-    const this_visibility_checked = this.props.element.hasOwnProperty("visibilityChecked")
-      ? this.props.element.visibilityChecked
-      : false;
-
     const {
       canHavePageBreakBefore,
       canHaveAlternateForm,
@@ -331,29 +326,27 @@ export default class FormElementsEdit extends React.Component {
             />
             <br />
 
-            {/* shubham code start */}
-            {(
-              <div className="custom-control custom-checkbox">
-                <input
-                  id="is-visibility-checked"
-                  className="custom-control-input"
-                  type="checkbox"
-                  checked={this_visibility_checked}
-                  value={true}
-                  onChange={this.editElementProp.bind(
-                    this,
-                    "visibilityChecked",
-                    "checked"
-                  )}
-                />
-                <label className="custom-control-label" htmlFor="is-visibility-checked">
-                  Visible
-                </label>
-              </div>
-            )}
+            {/* code start shubham */}
             {
               <div className="form-group">
-                <label className="" htmlFor="is-conditional-rule">Conditional Rule</label>
+                <label className="" htmlFor="field_name">Field Name (only alphabet, numbersand underscore. no spaces)</label>
+                <input
+                  id="field_name"
+                  placeholder="fieldname (only alphabet and numbers. no spaces)"
+                  className="form-control"
+                  type="text"
+                  value={this.props.element.field_name}
+                  onChange={this.editElementProp.bind(
+                    this,
+                    "field_name",
+                    "value"
+                  )}
+                />
+              </div>
+            }
+            {
+              <div className="form-group">
+                <label className="" htmlFor="is-conditional-rule">Conditional Visibility Rule</label>
                 <input
                   id="is-conditional-rule"
                   placeholder="eg: data.type == '1'? 1: 0"
@@ -368,7 +361,7 @@ export default class FormElementsEdit extends React.Component {
                 />
               </div>
             }
-            {/* shubham code end */}
+            {/*  code end shubham */}
             <div className="custom-control custom-checkbox">
               <input
                 id="is-required"

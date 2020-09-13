@@ -23,7 +23,27 @@ export default class ReactForm extends React.Component {
     this.emitter = new EventEmitter();
 
     this.state = {
-      extrafield: ''
+      somedata: null
+    }
+  }
+
+  componentDidMount(nextProps) {
+    // console.log('componet did mount')
+    let data = this.giveMeData()
+    //console.log('componetdidmount ko data', data)
+    this.setState({
+      somedata: { ...this.state.somedata, ...data }
+    })
+  }
+
+  componentDidUpdate(nextProps) {
+    // console.log('componet did update')
+    if (nextProps.data !== this.props.data) {
+      let data = this.giveMeData()
+     // console.log('didupdate ko data', data)
+      this.setState({
+        somedata: { ...this.state.somedata, ...data }
+      })
     }
   }
 
@@ -152,6 +172,10 @@ export default class ReactForm extends React.Component {
   _collect(item) {
     const itemData = { name: item.field_name };
     const ref = this.inputs[item.field_name];
+    if (ref == undefined) {
+      return null
+    }
+    console.log(item, 'item', ref);
     if (item.element === "Checkboxes" || item.element === "RadioButtons") {
       const checked_options = [];
       item.options.forEach((option) => {
@@ -159,7 +183,7 @@ export default class ReactForm extends React.Component {
           ref.options[`child_ref_${option.key}`]
         );
         if ($option.checked) {
-          checked_options.push(option.key);
+          checked_options.push(option.value);
         }
       });
       itemData.value = checked_options;
@@ -198,60 +222,28 @@ export default class ReactForm extends React.Component {
     }
   }
 
-  sendMeLabel(item) {
-    let label
-    for (let i = 0; i < item.length; i++) {
-      if (item[i] == '?' || item[i] == '=') {
-        return label
-        break
-      } else if (i == 0) {
-        label = item[i]
-      } else {
-        label = label + item[i]
+  giveMeData() {
+    let obj = {}
+    this.props.data.map((dat) => {
+      if (dat !== null) {
+
+        let pair
+        let vala = this._collect(dat);
+        if (vala != null) {
+          let fn = dat.field_name
+          let str = `pair = {${fn}: "${vala.value}"};`
+          eval(str)
+          obj = { ...obj, ...pair };
+        }
       }
-    }
+    })
+    return obj
   }
 
   handleChange(event) {
-    const event_name = event.target.name
-    const event_value = event.target.value
-    let event_label = null
-    let event_item = null
-
-    const datas = this.props.data
-    console.log('data', datas)
-
-    datas.map((dat, index) => {
-      if (dat.field_name == event_name) {
-        event_label = dat.label
-        event_item = dat
-      }
-    })
-
-    datas.map((data, index) => {
-      if (event_name !== data.field_name) {
-        if (data.conditonalRule !== undefined) {
-          let label = this.sendMeLabel(data.conditonalRule)
-          console.log('dskjaskj', event_label.localeCompare(label));
-          if (label.localeCompare(event_label) != 0) {
-
-            var str = data.conditonalRule
-            str = str.replace(label, `'${event_value}'`);
-
-            if (eval(str)) {
-              data.visibilityChecked = true
-              this.setState({
-                extrafield: ''
-              })
-            } else {
-              data.visibilityChecked = false
-              this.setState({
-                extrafield: ''
-              })
-            }
-          }
-        }
-      }
+    let data = this.giveMeData()
+    this.setState({
+      somedata: { ...this.state.data, ...data },
     })
   }
 
@@ -267,7 +259,7 @@ export default class ReactForm extends React.Component {
       // Publish errors, if any.
       this.emitter.emit("formValidation", errors);
     }
-    /* const d // console.log('i', item[i])ata = this._collectFormData(this.props.data);
+    /* const data = this._collectFormData(this.props.data);
      console.log(data);
      return; */
     // Only submit if there are no errors.
@@ -351,9 +343,22 @@ export default class ReactForm extends React.Component {
     });
 
     const items = data_items.map((item) => {
-      if (item.visibilityChecked == false || item.visibilityChecked == undefined) return null
-      // if (item.conditonalRule !== null) console.log("item", item);
-      if (!item) return null;
+      if (this.state.somedata === null || this.state.somedata == {}) {
+        console.log('null')
+        return null
+      }
+
+      let data = this.state.somedata
+      //console.log(data,'data')
+
+      if (!item) return null
+      if (item.conditonalRule) {
+        if (item.conditonalRule != null || item.conditonalRule != undefined) {
+          if (!eval(item.conditonalRule)) {
+            return null
+          }
+        }
+      }
       switch (item.element) {
         case "TextInput":
         case "NumberInput":
@@ -463,7 +468,6 @@ export default class ReactForm extends React.Component {
               </div>
             )}
             {items}
-            {this.state.extrafield}
             <div className="btn-toolbar">
               {!this.props.hide_actions && (
                 <input
