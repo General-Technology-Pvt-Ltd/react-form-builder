@@ -1,12 +1,12 @@
 {
-  "name": "react-form-builder2",
-  "version": "0.5.12",
+  "name": "react-form-builder",
+  "version": "0.6.0",
   "description": "A complete form builder for react.",
   "main": "lib/index.js",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kiho/react-form-builder.git"
+    "url": "git+https://github.com/sushantwork/react-form-builder.git"
   },
   "files": [
     "lib",
@@ -21,7 +21,7 @@
     "drag",
     "drop"
   ],
-  "author": "Kiho Chang",
+  "author": "General Technology",
   "dependencies": {
     "beedle": "^0.8.1",
     "classnames": "^2.2.6",
@@ -95,5 +95,13 @@
     "serve:api": "node server/index.js",
     "pretranspile": "rimraf lib",
     "transpile": "babel --out-dir lib src --copy-files"
+  },
+  "bugs": {
+    "url": "https://github.com/sushantwork/react-form-builder/issues"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "lib": "lib"
   }
 }
