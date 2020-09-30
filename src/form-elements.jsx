@@ -10,6 +10,8 @@ import ReactDatePicker from 'react-datepicker';
 import StarRating from './star-rating';
 import HeaderBar from './header-bar';
 
+import ID from "./UUID";
+
 const FormElements = {};
 const myxss = new xss.FilterXSS({
   whiteList: {
@@ -1024,7 +1026,7 @@ class Table extends React.Component {
             >
               Delete
             </button>
-          </td>
+            </td>
         </tr>
       );
     });
@@ -1043,15 +1045,24 @@ class Table extends React.Component {
     let pair;
     let str = `pair = {"${name}": "${value}"};`;
     eval(str);
-    this.setState({
-      row: { ...this.state.row, ...pair },
-    });
+    if (!this.state.row.key) {
+      let pair2;
+      let str2 = `pair2 = {"key": "table_row_${ID.uuid()}"};`;
+      eval(str2);
+      this.setState({
+        row: { ...this.state.row, ...pair2, ...pair },
+      });
+    } else {
+      this.setState({
+        row: { ...this.state.row, ...pair },
+      });
+    }
   };
 
   addrow = () => {
     // console.log(this.state.row, this.props.rows, this.props, 'row')
     this.props.data.rows.push(this.state.row);
-
+    console.log(this.props.data);
     this.setState({
       row: {},
     });
