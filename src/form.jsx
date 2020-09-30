@@ -8,7 +8,7 @@ import { EventEmitter } from "fbemitter";
 import FormValidator from "./form-validator";
 import FormElements from "./form-elements";
 
-const { Image, Checkboxes, Signature, Download, Camera } = FormElements;
+const { Image, Checkboxes, Signature, Download, Camera,Table } = FormElements;
 
 export default class ReactForm extends React.Component {
   form;
@@ -175,7 +175,7 @@ export default class ReactForm extends React.Component {
     if (ref == undefined) {
       return null
     }
-    console.log(item, 'item', ref);
+    //console.log(item, 'item', ref);
     if (item.element === "Checkboxes" || item.element === "RadioButtons") {
       const checked_options = [];
       item.options.forEach((option) => {
@@ -225,6 +225,7 @@ export default class ReactForm extends React.Component {
   giveMeData() {
     let obj = {}
     this.props.data.map((dat) => {
+      //dat.field_name = dat.field_name.replaceAll('-','_')
       if (dat !== null) {
 
         let pair
@@ -425,6 +426,21 @@ export default class ReactForm extends React.Component {
               defaultValue={this._getDefaultValue(item)}
             />
           );
+          case "Table":
+          return (
+            <Table
+              ref={(c) => (this.inputs[item.field_name] = c)}
+              read_only={this.props.read_only}
+              handleChange={this.handleChange}
+              mutable={true}
+              key={`form_${item.id}`}
+              data={item}
+              showdata={true}
+              defaultValue={this._optionsDefaultValue(item)}
+            />
+          );
+
+
         default:
           return this.getSimpleElement(item);
       }

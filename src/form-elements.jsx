@@ -874,6 +874,259 @@ class Range extends React.Component {
   }
 }
 
+
+/* class Table extends React.Component {
+  constructor(props) {
+    super(props);
+    this.tableField = React.createRef();
+
+    this.state = {
+      row: {},
+    }
+  }
+
+
+
+  getheader = () => {
+    return this.props.data.options.map((item) => {
+      return <th key={item.key}>{item.text}</th>
+    })
+  }
+
+  getrow = (row) => {
+    return this.props.data.options.map((item, index) => {
+      return <td key={index}>{row[item.text]} </td>
+    })
+  }
+
+  getrows = () => {
+    return this.props.data.rows.map((row, index) => {
+      return <tr key={index}>{this.getrow(row)}</tr>
+    })
+  }
+
+  handlechange = (e) => {
+    const { name, value } = e.target
+    let pair
+    let str = `pair = {"${name}": "${value}"};`
+    eval(str)
+    // console.log(pair, name, str, 'set', this.state.row)
+    this.setState({
+      row: { ...this.state.row, ...pair },
+    })
+  }
+
+  addrow = () => {
+
+    // console.log(this.state.row, this.props.rows, this.props, 'row')
+    this.props.data.rows.push(this.state.row)
+
+    this.setState({
+      row: {},
+    })
+  }
+
+  componentWillUnmount() {
+    this.props.data.rows = []
+  }
+
+  render() {
+    const props = {};
+    const { options, rows } = this.props.data;
+    props.type = "table";
+    props.className = "row";
+    props.name = this.props.data.field_name;
+    //console.log(this.props,'props of table')
+    if (this.props.mutable) {
+      props.defaultValue = this.props.defaultValue;
+      props.ref = this.tableField;
+    }
+    let baseClasses = "SortableItem rfb-item";
+    if (this.props.data.pageBreakBefore) {
+      baseClasses += " alwaysbreak";
+    }
+
+    if (this.props.read_only) {
+      props.disabled = "disabled";
+    }
+
+    return (
+      <div className={baseClasses}>
+        <ComponentHeader {...this.props} />
+        <div className="form-group">
+          <ComponentLabel {...this.props} />
+          <table className="table">
+            <thead>
+              <tr>
+                {this.getheader()}
+              </tr>
+            </thead>
+            <tbody>
+              {this.props.showdata
+                ?
+                (<>
+                  {this.getrows()}
+                  <tr>
+                    {this.props.data.options.map((item) => {
+                      return <td><input type="text" className="form-control d-inline" name={item.text} placeholder={`${item.text} item`} onChange={this.handlechange} /> </td>
+                    })}
+
+                  </tr>
+                </>
+                )
+                : null
+              }
+
+            </tbody>
+          </table>
+          {this.props.showdata ?
+            <button onClick={this.addrow} className="btn btn-secondary btn-sm">Add Row</button> : null}
+        </div>
+      </div>
+    );
+  }
+} */
+
+class Table extends React.Component {
+  constructor(props) {
+    super(props);
+    this.tableField = React.createRef();
+
+    this.state = {
+      row: {},
+      reload: null,
+    };
+  }
+
+  getheader = () => {
+    return this.props.data.options.map((item) => {
+      return <th key={item.key}>{item.text}</th>;
+    });
+  };
+
+  getrow = (row) => {
+    return this.props.data.options.map((item, index) => {
+      return <td key={index}>{row[item.text]} </td>;
+    });
+  };
+
+  getrows = () => {
+    return this.props.data.rows.map((row, index) => {
+      return (
+        <tr key={index.toString()}>
+          {this.getrow(row)}
+          <td>
+            <button
+              onClick={() => {
+                this.deleterow(index);
+              }}
+              className="btn btn-danger btn-sm"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      );
+    });
+  };
+  deleterow = (index) => {
+    // console.log("before delete", this.props.data.rows, index);
+    this.props.data.rows.splice(index, 1);
+    this.setState({
+      reload: "",
+    });
+    // console.log("after delete", this.props.data.rows);
+  };
+
+  handlechange = (e) => {
+    const { name, value } = e.target;
+    let pair;
+    let str = `pair = {"${name}": "${value}"};`;
+    eval(str);
+    this.setState({
+      row: { ...this.state.row, ...pair },
+    });
+  };
+
+  addrow = () => {
+    // console.log(this.state.row, this.props.rows, this.props, 'row')
+    this.props.data.rows.push(this.state.row);
+
+    this.setState({
+      row: {},
+    });
+  };
+
+  componentWillUnmount() {
+    this.props.data.rows = [];
+  }
+
+  render() {
+    const props = {};
+    const { options, rows } = this.props.data;
+    props.type = "table";
+    props.className = "row";
+    props.name = this.props.data.field_name;
+    //console.log(this.props,'props of table')
+    if (this.props.mutable) {
+      props.defaultValue = this.props.defaultValue;
+      props.ref = this.tableField;
+    }
+    let baseClasses = "SortableItem rfb-item";
+    if (this.props.data.pageBreakBefore) {
+      baseClasses += " alwaysbreak";
+    }
+
+    if (this.props.read_only) {
+      props.disabled = "disabled";
+    }
+
+    return (
+      <div className={baseClasses}>
+        <ComponentHeader {...this.props} />
+        <div className="form-group">
+          <ComponentLabel {...this.props} />
+          <table className="table">
+            <thead>
+              <tr>
+                {this.getheader()}
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.props.showdata ? (
+                <>
+                  {this.getrows()}
+                  <tr>
+                    {this.props.data.options.map((item) => {
+                      return (
+                        <td>
+                          <input
+                            type="text"
+                            className="form-control d-inline"
+                            name={item.text}
+                            placeholder={`${item.text} item`}
+                            onChange={this.handlechange}
+                          />{" "}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </>
+              ) : null}
+            </tbody>
+          </table>
+          {this.props.showdata ? (
+            <button onClick={this.addrow} className="btn btn-secondary btn-sm">
+              Add Row
+            </button>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+}
+
 FormElements.Header = Header;
 FormElements.Paragraph = Paragraph;
 FormElements.Label = Label;
@@ -893,5 +1146,6 @@ FormElements.HyperLink = HyperLink;
 FormElements.Download = Download;
 FormElements.Camera = Camera;
 FormElements.Range = Range;
+FormElements.Table = Table;
 
 export default FormElements;
