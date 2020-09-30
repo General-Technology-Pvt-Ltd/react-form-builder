@@ -377,7 +377,7 @@ export default class Toolbar extends React.Component {
       //     // text: "some dummy text",
       //   },
       //   {
-      //     'Name': "biprash",
+      //     'Name': "ram",
       //     'Age': 15,
       //     'key': `table_option_row_${ID.uuid()}`,
       //     // text: "some dummy text",
