@@ -369,20 +369,7 @@ export default class Toolbar extends React.Component {
         elementOptions.element
       )
       elementOptions.rows = item.rows;
-      // elementOptions.rows = [
-      //   {
-      //     'Name': "shubham",
-      //     'Age': 22,
-      //     'key': `table_option_row_${ID.uuid()}`,
-      //     // text: "some dummy text",
-      //   },
-      //   {
-      //     'Name': "ram",
-      //     'Age': 15,
-      //     'key': `table_option_row_${ID.uuid()}`,
-      //     // text: "some dummy text",
-      //   },
-      // ]
+
     }
 
     if (item.defaultValue) {
