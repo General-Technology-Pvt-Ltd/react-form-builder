@@ -875,120 +875,6 @@ class Range extends React.Component {
     );
   }
 }
-
-
-/* class Table extends React.Component {
-  constructor(props) {
-    super(props);
-    this.tableField = React.createRef();
-
-    this.state = {
-      row: {},
-    }
-  }
-
-
-
-  getheader = () => {
-    return this.props.data.options.map((item) => {
-      return <th key={item.key}>{item.text}</th>
-    })
-  }
-
-  getrow = (row) => {
-    return this.props.data.options.map((item, index) => {
-      return <td key={index}>{row[item.text]} </td>
-    })
-  }
-
-  getrows = () => {
-    return this.props.data.rows.map((row, index) => {
-      return <tr key={index}>{this.getrow(row)}</tr>
-    })
-  }
-
-  handlechange = (e) => {
-    const { name, value } = e.target
-    let pair
-    let str = `pair = {"${name}": "${value}"};`
-    eval(str)
-    // console.log(pair, name, str, 'set', this.state.row)
-    this.setState({
-      row: { ...this.state.row, ...pair },
-    })
-  }
-
-  addrow = () => {
-
-    // console.log(this.state.row, this.props.rows, this.props, 'row')
-    this.props.data.rows.push(this.state.row)
-
-    this.setState({
-      row: {},
-    })
-  }
-
-  componentWillUnmount() {
-    this.props.data.rows = []
-  }
-
-  render() {
-    const props = {};
-    const { options, rows } = this.props.data;
-    props.type = "table";
-    props.className = "row";
-    props.name = this.props.data.field_name;
-    //console.log(this.props,'props of table')
-    if (this.props.mutable) {
-      props.defaultValue = this.props.defaultValue;
-      props.ref = this.tableField;
-    }
-    let baseClasses = "SortableItem rfb-item";
-    if (this.props.data.pageBreakBefore) {
-      baseClasses += " alwaysbreak";
-    }
-
-    if (this.props.read_only) {
-      props.disabled = "disabled";
-    }
-
-    return (
-      <div className={baseClasses}>
-        <ComponentHeader {...this.props} />
-        <div className="form-group">
-          <ComponentLabel {...this.props} />
-          <table className="table">
-            <thead>
-              <tr>
-                {this.getheader()}
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.showdata
-                ?
-                (<>
-                  {this.getrows()}
-                  <tr>
-                    {this.props.data.options.map((item) => {
-                      return <td><input type="text" className="form-control d-inline" name={item.text} placeholder={`${item.text} item`} onChange={this.handlechange} /> </td>
-                    })}
-
-                  </tr>
-                </>
-                )
-                : null
-              }
-
-            </tbody>
-          </table>
-          {this.props.showdata ?
-            <button onClick={this.addrow} className="btn btn-secondary btn-sm">Add Row</button> : null}
-        </div>
-      </div>
-    );
-  }
-} */
-
 class Table extends React.Component {
   constructor(props) {
     super(props);
@@ -996,6 +882,8 @@ class Table extends React.Component {
 
     this.state = {
       row: {},
+      isUpdate: false,
+      updateIndex: null,
       reload: null,
     };
   }
@@ -1015,30 +903,81 @@ class Table extends React.Component {
   getrows = () => {
     return this.props.data.rows.map((row, index) => {
       return (
-        <tr key={index.toString()}>
+        <tr key={row.key}>
+          {this.props.data.rows.length > 0 ? <td>{index + 1}</td> : null}
           {this.getrow(row)}
-          <td>
-            <button
-              onClick={() => {
-                this.deleterow(index);
-              }}
-              className="btn btn-danger btn-sm"
-            >
-              Delete
+          {!this.state.isUpdate ?
+            <>
+              <td>
+                <button
+                  onClick={() => {
+                    this.editrow(index);
+                  }}
+                  className="btn btn-warning btn-sm"
+                >
+                  Edit
             </button>
-            </td>
+              </td>
+              <td>
+                <button
+                  onClick={() => {
+                    this.deleterow(index);
+                  }}
+                  className="btn btn-danger btn-sm"
+                >
+                  Delete
+            </button>
+              </td>
+            </> : null}
         </tr>
       );
     });
   };
+
+  addrow = () => {
+    // console.log(this.state.row, this.props.rows, this.props, 'row')
+    this.props.data.rows.push(this.state.row);
+    console.log(this.props.data, this.state.row, 'addrow')
+    this.setState({
+      row: {},
+    });
+  };
+
+  editrow = (index) => {
+    const row = this.props.data.rows[index]
+    console.log(row)
+    this.setState({
+      row: row,
+      isUpdate: true,
+      updateIndex: index,
+    })
+  }
+
   deleterow = (index) => {
-    // console.log("before delete", this.props.data.rows, index);
     this.props.data.rows.splice(index, 1);
     this.setState({
       reload: "",
     });
-    // console.log("after delete", this.props.data.rows);
   };
+
+  updaterow = () => {
+
+    this.props.data.rows[this.state.updateIndex] = { ...this.state.row }
+
+    this.setState({
+      row: {},
+      isUpdate: false,
+      updateIndex: null,
+    })
+  }
+
+  cancelUpdate = () => {
+    this.setState({
+      row: {},
+      isUpdate: false,
+      updateIndex: null,
+    })
+  }
 
   handlechange = (e) => {
     const { name, value } = e.target;
@@ -1053,19 +992,11 @@ class Table extends React.Component {
         row: { ...this.state.row, ...pair2, ...pair },
       });
     } else {
+
       this.setState({
         row: { ...this.state.row, ...pair },
       });
     }
-  };
-
-  addrow = () => {
-    // console.log(this.state.row, this.props.rows, this.props, 'row')
-    this.props.data.rows.push(this.state.row);
-    console.log(this.props.data);
-    this.setState({
-      row: {},
-    });
   };
 
   componentWillUnmount() {
@@ -1097,11 +1028,12 @@ class Table extends React.Component {
         <ComponentHeader {...this.props} />
         <div className="form-group">
           <ComponentLabel {...this.props} />
-          <table className="table">
+          <table className="table table-responsive">
             <thead>
               <tr>
+                {rows.length > 0 ? <th>S.N.</th> : null}
                 {this.getheader()}
-                <th></th>
+                {rows.length > 0 ? <th>Action</th> : null}
               </tr>
             </thead>
             <tbody>
@@ -1109,6 +1041,7 @@ class Table extends React.Component {
                 <>
                   {this.getrows()}
                   <tr>
+                    {rows.length > 0 ? <tr></tr> : null}
                     {this.props.data.options.map((item) => {
                       return (
                         <td>
@@ -1118,6 +1051,7 @@ class Table extends React.Component {
                             name={item.text}
                             placeholder={`${item.text} item`}
                             onChange={this.handlechange}
+                            value={this.state.row[item.text] ? this.state.row[item.text] : ""}
                           />{" "}
                         </td>
                       );
@@ -1127,11 +1061,23 @@ class Table extends React.Component {
               ) : null}
             </tbody>
           </table>
-          {this.props.showdata ? (
-            <button onClick={this.addrow} className="btn btn-secondary btn-sm">
-              Add Row
+          {this.props.showdata ? <>
+            {this.state.isUpdate ?
+              <>
+                <p className="text-warning">You are updating <b>S.N: {this.state.updateIndex + 1}</b></p>
+                <button onClick={this.updaterow} className="btn btn-warning btn-sm mr-2">
+                  Update
+              </button>
+                <button onClick={this.cancelUpdate} className="btn btn-danger btn-sm">
+                  Cancel
+              </button>
+              </>
+              :
+              <button onClick={this.addrow} className="btn btn-secondary btn-sm">
+                Add Row
             </button>
-          ) : null}
+            }
+          </> : null}
         </div>
       </div>
     );
