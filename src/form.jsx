@@ -187,6 +187,8 @@ export default class ReactForm extends React.Component {
         }
       });
       itemData.value = checked_options;
+    } else if(item.element == "Table") {
+      itemData.value = item.rows
     } else {
       if (!ref) return null;
       itemData.value = this._getItemValue(item, ref).value;

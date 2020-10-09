@@ -936,8 +936,7 @@ class Table extends React.Component {
 
   addrow = () => {
    const output=this.props.data.options
-   console.log(output)
-
+  // console.log(output)
    for(let i=0;i<output.length;i++){
      if(Object.keys(this.state.row).length<1){
       alert('Please fill empty fields');
@@ -1017,8 +1016,6 @@ class Table extends React.Component {
   }
 
   render() {
-
-  console.log(this.props.data)
     const props = {};
     const { options, rows } = this.props.data;
     props.type = "table";
@@ -1079,7 +1076,7 @@ class Table extends React.Component {
           {this.props.showdata ? <>
             {this.state.isUpdate ?
               <>
-                <p className="text-warning">You are updating <b>S.N: {this.state.updateIndex + 1}</b></p>
+                {/* <p className="text-warning">You are updating <b>S.N: {this.state.updateIndex + 1}</b></p> */}
                 <button onClick={this.updaterow} className="btn btn-warning btn-sm mr-2">
                   Update
               </button>
@@ -1088,7 +1085,7 @@ class Table extends React.Component {
               </button>
               </>
               :
-              <button onClick={this.addrow} className="btn btn-secondary btn-sm">
+              <button onClick={this.addrow} type="button" className="btn btn-secondary btn-sm">
                 Add Row
             </button>
             }
