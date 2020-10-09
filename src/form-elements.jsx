@@ -904,13 +904,13 @@ class Table extends React.Component {
     return this.props.data.rows.map((row, index) => {
       return (
         <tr key={row.key}>
-          {this.props.data.rows.length > 0 ? <td>{index + 1}</td> : null}
+          {/* {this.props.data.rows.length > 0 ? <td>{index + 1}</td> : null} */}
           {this.getrow(row)}
           {!this.state.isUpdate ?
             <>
               <td>
                 <button
-                  onClick={() => {
+                  onClick={() => {this.props.data.options
                     this.editrow(index);
                   }}
                   className="btn btn-warning btn-sm"
@@ -935,9 +935,22 @@ class Table extends React.Component {
   };
 
   addrow = () => {
-    // console.log(this.state.row, this.props.rows, this.props, 'row')
+   const output=this.props.data.options
+   console.log(output)
+
+   for(let i=0;i<output.length;i++){
+     if(Object.keys(this.state.row).length<1){
+      alert('Please fill empty fields');
+      return null;
+     }
+    if(!this.state.row[output[i].text]){
+
+      alert('Enter all values on the input field of table');
+      return null;
+    }
+   }
     this.props.data.rows.push(this.state.row);
-    console.log(this.props.data, this.state.row, 'addrow')
+    // console.log(this.props.data, this.state.row, 'addrow')
     this.setState({
       row: {},
     });
@@ -1004,6 +1017,8 @@ class Table extends React.Component {
   }
 
   render() {
+
+  console.log(this.props.data)
     const props = {};
     const { options, rows } = this.props.data;
     props.type = "table";
@@ -1031,7 +1046,7 @@ class Table extends React.Component {
           <table className="table table-responsive">
             <thead>
               <tr>
-                {rows.length > 0 ? <th>S.N.</th> : null}
+                {/* {rows.length > 0 ? <th>S.N.</th> : null} */}
                 {this.getheader()}
                 {rows.length > 0 ? <th>Action</th> : null}
               </tr>
@@ -1041,7 +1056,7 @@ class Table extends React.Component {
                 <>
                   {this.getrows()}
                   <tr>
-                    {rows.length > 0 ? <tr></tr> : null}
+                    {/* {rows.length > 0 ? <tr></tr> : null} */}
                     {this.props.data.options.map((item) => {
                       return (
                         <td>
