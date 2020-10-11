@@ -1,6 +1,6 @@
 {
   "name": "gentech-form-builder",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A complete form builder for react.",
   "main": "lib/index.js",
   "license": "GPL-3.0",

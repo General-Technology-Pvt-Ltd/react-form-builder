@@ -1085,9 +1085,9 @@ class Table extends React.Component {
               </button>
               </>
               :
-              <button onClick={this.addrow} type="button" className="btn btn-secondary btn-sm">
+              <a onClick={this.addrow} className="btn btn-secondary btn-sm">
                 Add Row
-            </button>
+            </a>
             }
           </> : null}
         </div>
