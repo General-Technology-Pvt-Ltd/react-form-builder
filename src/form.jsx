@@ -183,7 +183,7 @@ export default class ReactForm extends React.Component {
           ref.options[`child_ref_${option.key}`]
         );
         if ($option.checked) {
-          checked_options.push(option.value);
+          checked_options.push(option.key);
         }
       });
       itemData.value = checked_options;
@@ -249,12 +249,25 @@ export default class ReactForm extends React.Component {
       somedata: { ...this.state.data, ...data },
     })
   }
+   //createJSONpara(data) {
+    //alert( "1: " );
+  //s  alert( "2: " );
+   // alert( "3: " + data[0].value[0].Tableheader1);
+  //   data.map((datas)=>{
+  //     return(
+  //       //console.log(Object.keys(datas.value[0])+datas.value[0].Tableheader1+datas.value[0].Tableheader2)
+  //       //alert(datas.value[0].Tableheader1)
 
+
+  //     );
+  //   })
+
+  // }
   handleSubmit(e) {
     e.preventDefault();
     const data = this._collectFormData(this.props.data);
     console.log("Submit data", data);
-
+    //this.createJSONpara(data)
     let errors = [];
 
     if (!this.props.skip_validations) {
@@ -271,6 +284,7 @@ export default class ReactForm extends React.Component {
       if (onSubmit) {
         const data = this._collectFormData(this.props.data);
         console.log("dat", data);
+
         // return;
         onSubmit(data);
         // } else {
@@ -280,9 +294,13 @@ export default class ReactForm extends React.Component {
     }
   }
 
+
+
   validateForm() {
     const errors = [];
-    let data_items = this.props.data;
+    let data_items = this.props.data;// } else {
+      //   const $form = ReactDOM.findDOMNode(this.form);
+      //   $form.submit();
 
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
@@ -347,7 +365,7 @@ export default class ReactForm extends React.Component {
 
     const items = data_items.map((item) => {
       if (this.state.somedata === null || this.state.somedata == {}) {
-        console.log('null')
+        //console.log('null')
         return null
       }
 
