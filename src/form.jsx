@@ -227,7 +227,7 @@ export default class ReactForm extends React.Component {
   giveMeData() {
     let obj = {}
     this.props.data.map((dat) => {
-      //dat.field_name = dat.field_name.replaceAll('-','_')
+      dat.field_name = dat.field_name.replaceAll('-','_')
       if (dat !== null) {
 
         let pair
@@ -346,6 +346,7 @@ export default class ReactForm extends React.Component {
   render() {
     let data_items = this.props.data;
 
+    console.log(this.props);
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
     }

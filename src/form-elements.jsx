@@ -1011,9 +1011,9 @@ class Table extends React.Component {
     }
   };
 
-  componentWillUnmount() {
+  /* componentWillUnmount() {
     this.props.data.rows = [];
-  }
+  } */
 
   render() {
     const props = {};
