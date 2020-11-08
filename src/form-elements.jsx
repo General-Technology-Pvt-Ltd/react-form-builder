@@ -1011,9 +1011,13 @@ class Table extends React.Component {
     }
   };
 
-  componentDidMount() {
+  componentWillMount() {
+
     if(this.props.defaultValue){
       this.props.data.rows = this.props.defaultValue
+      this.setState({
+        reload: ''
+      })
     }
   }
 
