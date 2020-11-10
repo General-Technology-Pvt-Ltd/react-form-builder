@@ -183,7 +183,7 @@ export default class ReactForm extends React.Component {
           ref.options[`child_ref_${option.key}`]
         );
         if ($option.checked) {
-          checked_options.push(option.key);
+          checked_options.push(option.value);
         }
       });
       itemData.value = checked_options;

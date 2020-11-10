@@ -1012,7 +1012,6 @@ class Table extends React.Component {
   };
 
   componentWillMount() {
-
     if(this.props.defaultValue){
       this.props.data.rows = this.props.defaultValue
       this.setState({
