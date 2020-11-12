@@ -23,24 +23,26 @@ export default class ReactForm extends React.Component {
     this.emitter = new EventEmitter();
 
     this.state = {
-      somedata: null
+      somedata: null,
+      reload: ''
     }
   }
 
-  componentDidMount(nextProps) {
+  componentDidMount() {
     // console.log('componet did mount')
-    let data = this.giveMeData()
-    //console.log('componetdidmount ko data', data)
+    let data = this.giveMeData('update')
+    console.log('componetdidmount ko data', data)
     this.setState({
-      somedata: { ...this.state.somedata, ...data }
+      somedata: { ...this.state.somedata, ...data },
+      reload: ''
     })
   }
 
   componentDidUpdate(nextProps) {
     // console.log('componet did update')
     if (nextProps.data !== this.props.data) {
-      let data = this.giveMeData()
-     // console.log('didupdate ko data', data)
+      let data = this.giveMeData('update')
+     console.log('didupdate ko data', data)
       this.setState({
         somedata: { ...this.state.somedata, ...data }
       })
@@ -169,7 +171,7 @@ export default class ReactForm extends React.Component {
     return invalid;
   }
 
-  _collect(item) {
+  _collect(item, check=null) {
     const itemData = { name: item.field_name };
     const ref = this.inputs[item.field_name];
     if (ref == undefined) {
@@ -183,7 +185,12 @@ export default class ReactForm extends React.Component {
           ref.options[`child_ref_${option.key}`]
         );
         if ($option.checked) {
-          checked_options.push(option.value);
+          if(check){
+            checked_options.push(option.value);
+          } else {
+            console.log(option.key);
+            checked_options.push(option.key);
+          }
         }
       });
       itemData.value = checked_options;
@@ -224,14 +231,14 @@ export default class ReactForm extends React.Component {
     }
   }
 
-  giveMeData() {
+  giveMeData(check=null) {
     let obj = {}
     this.props.data.map((dat) => {
       dat.field_name = dat.field_name.replaceAll('-','_')
       if (dat !== null) {
 
         let pair
-        let vala = this._collect(dat);
+        let vala = this._collect(dat, check);
         if (vala != null) {
           let fn = dat.field_name
           let str = `pair = {${fn}: "${vala.value}"};`
@@ -244,7 +251,7 @@ export default class ReactForm extends React.Component {
   }
 
   handleChange(event) {
-    let data = this.giveMeData()
+    let data = this.giveMeData('update')
     this.setState({
       somedata: { ...this.state.data, ...data },
     })
@@ -366,12 +373,12 @@ export default class ReactForm extends React.Component {
 
     const items = data_items.map((item) => {
       if (this.state.somedata === null || this.state.somedata == {}) {
-        //console.log('null')
+        console.log('no data', this.state.somedata)
         return null
       }
 
       let data = this.state.somedata
-      //console.log(data,'data')
+      console.log(data,'data')
 
       if (!item) return null
       if (item.conditonalRule) {
