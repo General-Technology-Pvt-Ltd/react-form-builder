@@ -31,7 +31,7 @@ export default class ReactForm extends React.Component {
   componentDidMount() {
     // console.log('componet did mount')
     let data = this.giveMeData('update')
-    console.log('componetdidmount ko data', data)
+    // console.log('componetdidmount ko data', data)
     this.setState({
       somedata: { ...this.state.somedata, ...data },
       reload: ''
@@ -273,7 +273,7 @@ export default class ReactForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const data = this._collectFormData(this.props.data);
-    console.log("Submit data", data);
+    // console.log("Submit data", data);
     //this.createJSONpara(data)
     let errors = [];
 
@@ -290,7 +290,7 @@ export default class ReactForm extends React.Component {
       const { onSubmit } = this.props;
       if (onSubmit) {
         const data = this._collectFormData(this.props.data);
-        console.log("dat", data);
+        // console.log("dat", data);
 
         // return;
         onSubmit(data);
@@ -353,7 +353,7 @@ export default class ReactForm extends React.Component {
   render() {
     let data_items = this.props.data;
 
-    console.log(this.props);
+    // console.log(this.props);
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
     }
@@ -373,12 +373,12 @@ export default class ReactForm extends React.Component {
 
     const items = data_items.map((item) => {
       if (this.state.somedata === null || this.state.somedata == {}) {
-        console.log('no data', this.state.somedata)
+        // console.log('no data', this.state.somedata)
         return null
       }
 
       let data = this.state.somedata
-      console.log(data,'data')
+      // console.log(data,'data')
 
       if (!item) return null
       if (item.conditonalRule) {
@@ -420,6 +420,7 @@ export default class ReactForm extends React.Component {
               mutable={true}
               key={`form_${item.id}`}
               data={item}
+              showdata={true}
               defaultValue={this._optionsDefaultValue(item)}
             />
           );
