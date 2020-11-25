@@ -23,7 +23,7 @@ export default class ReactForm extends React.Component {
     this.emitter = new EventEmitter();
 
     this.state = {
-      // somedata: null,
+      somedata: null,
       reload: ''
     }
   }
