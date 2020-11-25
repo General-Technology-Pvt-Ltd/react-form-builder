@@ -936,7 +936,6 @@ class Table extends React.Component {
 
   addrow = () => {
    const output=this.props.data.options
-  // console.log(output)
    for(let i=0;i<output.length;i++){
      if(Object.keys(this.state.row).length<1){
       alert('Please fill empty fields');
@@ -949,7 +948,6 @@ class Table extends React.Component {
     }
    }
     this.props.data.rows.push(this.state.row);
-    // console.log(this.props.data, this.state.row, 'addrow')
     this.setState({
       row: {},
     });
@@ -957,7 +955,6 @@ class Table extends React.Component {
 
   editrow = (index) => {
     const row = this.props.data.rows[index]
-    console.log(row)
     this.setState({
       row: row,
       isUpdate: true,
@@ -1030,7 +1027,6 @@ class Table extends React.Component {
     props.type = "table";
     props.className = "row";
     props.name = this.props.data.field_name;
-    //console.log(this.props,'props of table')
     if (this.props.mutable) {
       props.defaultValue = this.props.defaultValue;
       props.ref = this.tableField;

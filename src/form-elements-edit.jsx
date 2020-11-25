@@ -41,7 +41,6 @@ export default class FormElementsEdit extends React.Component {
     // targProperty could be value or checked
     const this_element = this.state.element;
     this_element[elemProperty] = e.target[targProperty];
-    // console.log("element", this.state.element);
 
     this.setState(
       {

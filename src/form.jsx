@@ -29,9 +29,7 @@ export default class ReactForm extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('componet did mount')
     let data = this.giveMeData('update')
-    // console.log('componetdidmount ko data', data)
     this.setState({
       somedata: { ...this.state.somedata, ...data },
       reload: ''
@@ -39,10 +37,8 @@ export default class ReactForm extends React.Component {
   }
 
   componentDidUpdate(nextProps) {
-    // console.log('componet did update')
     if (nextProps.data !== this.props.data) {
       let data = this.giveMeData('update')
-     console.log('didupdate ko data', data)
       this.setState({
         somedata: { ...this.state.somedata, ...data }
       })
@@ -178,7 +174,6 @@ export default class ReactForm extends React.Component {
     if (ref == undefined) {
       return null
     }
-    //console.log(item, 'item', ref);
     if (item.element === "Checkboxes" || item.element === "RadioButtons") {
       const checked_options = [];
       item.options.forEach((option) => {
@@ -189,7 +184,6 @@ export default class ReactForm extends React.Component {
           if(check){
             checked_options.push(option.value);
           } else {
-            console.log(option.key);
             checked_options.push(option.key);
           }
         }
@@ -260,24 +254,10 @@ export default class ReactForm extends React.Component {
       somedata: { ...this.state.data, ...data },
     })
   }
-   //createJSONpara(data) {
-    //alert( "1: " );
-  //s  alert( "2: " );
-   // alert( "3: " + data[0].value[0].Tableheader1);
-  //   data.map((datas)=>{
-  //     return(
-  //       //console.log(Object.keys(datas.value[0])+datas.value[0].Tableheader1+datas.value[0].Tableheader2)
-  //       //alert(datas.value[0].Tableheader1)
-
-
-  //     );
-  //   })
-
-  // }
+ 
   handleSubmit(e) {
     e.preventDefault();
     const data = this._collectFormData(this.props.data);
-    // console.log("Submit data", data);
     //this.createJSONpara(data)
     let errors = [];
 
@@ -287,14 +267,12 @@ export default class ReactForm extends React.Component {
       this.emitter.emit("formValidation", errors);
     }
     /* const data = this._collectFormData(this.props.data);
-     console.log(data);
      return; */
     // Only submit if there are no errors.
     if (errors.length < 1) {
       const { onSubmit } = this.props;
       if (onSubmit) {
         const data = this._collectFormData(this.props.data);
-        // console.log("dat", data);
 
         // return;
         onSubmit(data);
@@ -357,7 +335,6 @@ export default class ReactForm extends React.Component {
   render() {
     let data_items = this.props.data;
 
-    // console.log(this.props);
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
     }
@@ -377,12 +354,10 @@ export default class ReactForm extends React.Component {
 
     const items = data_items.map((item) => {
       if (this.state.somedata === null || this.state.somedata == {}) {
-        // console.log('no data', this.state.somedata)
         return null
       }
 
       let data = this.state.somedata
-      // console.log(data,'data')
 
       if (!item) return null
       if (item.conditonalRule) {
