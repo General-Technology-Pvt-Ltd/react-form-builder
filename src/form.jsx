@@ -23,7 +23,7 @@ export default class ReactForm extends React.Component {
     this.emitter = new EventEmitter();
 
     this.state = {
-      somedata: null,
+      // somedata: null,
       reload: ''
     }
   }
@@ -101,7 +101,8 @@ export default class ReactForm extends React.Component {
     } else if (ref && ref.inputField) {
       $item = ReactDOM.findDOMNode(ref.inputField.current);
       if (typeof $item.value === "string") {
-        $item.value = $item.value.trim();
+        // $item.value = $item.value.trim();
+        $item.value = $item.value;
       }
     }
     return $item;
@@ -194,12 +195,14 @@ export default class ReactForm extends React.Component {
         }
       });
       itemData.value = checked_options;
-    } else if(item.element == "Table") {
-      itemData.value = item.rows
-    } else {
-      if (!ref) return null;
-      itemData.value = this._getItemValue(item, ref).value;
     }
+    else if(item.element == "Table") {
+      itemData.value = item.rows
+    }
+    else {
+     if (!ref) return null;
+      itemData.value = this._getItemValue(item, ref).value;
+   }
     return itemData;
   }
 
@@ -234,7 +237,7 @@ export default class ReactForm extends React.Component {
   giveMeData(check=null) {
     let obj = {}
     this.props.data.map((dat) => {
-      dat.field_name = dat.field_name.replaceAll('-','_')
+      dat.field_name = dat.field_name.replaceAll('-','_');
       if (dat !== null) {
 
         let pair
@@ -246,6 +249,7 @@ export default class ReactForm extends React.Component {
           obj = { ...obj, ...pair };
         }
       }
+
     })
     return obj
   }
