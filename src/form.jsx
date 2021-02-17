@@ -94,7 +94,9 @@ export default class ReactForm extends React.Component {
       $item.value = ref.state.img
         ? ref.state.img.replace("data:image/png;base64,", "")
         : "";
-    } else if (ref && ref.inputField) {
+    } else if (item.element === "Download") {
+      $item.value = ref.state.value;
+    }  else if (ref && ref.inputField) {
       $item = ReactDOM.findDOMNode(ref.inputField.current);
       if (typeof $item.value === "string") {
         // $item.value = $item.value.trim();
@@ -192,6 +194,8 @@ export default class ReactForm extends React.Component {
     }
     else if(item.element == "Table") {
       itemData.value = item.rows
+    } else if (item.element === "Download") {
+      itemData.value = this._getItemValue(item, ref).value;
     }
     else {
      if (!ref) return null;
@@ -418,9 +422,12 @@ export default class ReactForm extends React.Component {
           return (
             <Download
               download_path={this.props.download_path}
+              handleChange={this.handleChange}
+              read_only={this.props.read_only || item.readOnly}
               mutable={true}
               key={`form_${item.id}`}
               data={item}
+              ref={(c) => (this.inputs[item.field_name] = c)}
             />
           );
         case "Camera":
@@ -438,7 +445,7 @@ export default class ReactForm extends React.Component {
           return (
             <Table
               ref={(c) => (this.inputs[item.field_name] = c)}
-              read_only={this.props.read_only}
+              read_only={this.props.read_only || item.readOnly}
               handleChange={this.handleChange}
               mutable={true}
               key={`form_${item.id}`}

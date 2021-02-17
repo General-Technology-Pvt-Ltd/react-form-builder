@@ -1,4 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
+import axios from "axios";
 import React from 'react';
 import Select from 'react-select';
 import xss from 'xss';
@@ -37,7 +38,7 @@ const ComponentLabel = (props) => {
 
   return (
     <label className={props.className || ''}>
-      <span dangerouslySetInnerHTML={{ __html: myxss.process(props.data.label) }}/>
+      <span dangerouslySetInnerHTML={{ __html: myxss.process(props.data.label || props.data.content) }}/>
       {hasRequiredLabel && <span className="label-required badge badge-danger">Required</span>}
     </label>
   );
@@ -702,15 +703,53 @@ class HyperLink extends React.Component {
 }
 
 class Download extends React.Component {
-  render() {
-    let baseClasses = 'SortableItem rfb-item';
-    if (this.props.data.pageBreakBefore) { baseClasses += ' alwaysbreak'; }
+  constructor(props) {
+    super(props);
+    this.inputField = React.createRef();
+    this.state = {
+      value: "",
+      fileInfo: {},
+      loading: null,
+    };
+  }
 
+  handleFileUpload = (e) => {
+    const server =
+      process.env.UPLOAD_SERVER || "http://localhost:9090/uploadfile";
+
+    var formData = new FormData();
+    const data = Array.from(e.target.files);
+    formData.append("myFile", data[0]);
+    Promise.all([
+      axios.post(server, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    ]).then((res) => {
+      this.setState({ value: res[0].data.path, fileInfo: res[0].data });
+    });
+  };
+  
+  render() {
+    const props = {};
+    props.type = "file";
+    props.className = 'form-control';
+    props.name = this.props.data.field_name;
+    props.file_path = this.state.value;
+    let baseClasses = 'SortableItem rfb-item';
+
+    if (this.props.read_only) {
+      props.disabled = "disabled";
+    }
+    if (this.props.data.pageBreakBefore) { baseClasses += ' alwaysbreak'; }
     return (
       <div className={baseClasses}>
         <ComponentHeader {...this.props} />
         <div className="form-group">
-          <a href={`${this.props.download_path}?id=${this.props.data.file_path}`}>{this.props.data.content}</a>
+        <ComponentLabel {...this.props} />
+        <input onChange={this.handleFileUpload} {...props} />
+        {props.file_path ? <div className="mt-2 ml-2"><h6>{this.state.fileInfo.originalname}</h6></div>: ""}
         </div>
       </div>
     );
@@ -1016,12 +1055,15 @@ class Table extends React.Component {
       })
     }
   }
-
+  
   /* componentWillUnmount() {
     this.props.data.rows = [];
   } */
-
+  
   render() {
+    if (this.props.read_only) {
+      props.disabled = 'disabled';
+    }
     const props = {};
     const { options, rows } = this.props.data;
     props.type = "table";
