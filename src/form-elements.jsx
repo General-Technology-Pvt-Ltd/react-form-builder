@@ -714,9 +714,7 @@ class Download extends React.Component {
   }
 
   handleFileUpload = (e) => {
-    const server =
-      process.env.UPLOAD_SERVER || "http://localhost:9090/uploadfile";
-
+    const server = process.env.REACT_APP_UPLOAD_SERVER || "http://localhost:8181/api/attachment";
     var formData = new FormData();
     const data = Array.from(e.target.files);
     formData.append("myFile", data[0]);
