@@ -187,10 +187,10 @@ export default class FormElementsEdit extends React.Component {
     )
       ? this.props.element.conditonalRule
       : '';
-    const this_prefix_rule = this.props.element.hasOwnProperty(
-      'prefixRule'
+    const populateKey = this.props.element.hasOwnProperty(
+      'populateKey'
     )
-      ? this.props.element.conditonalRule
+      ? this.props.element.populateKey
       : '';
     const this_validation_rule = this.props.element.hasOwnProperty(
       'validationRule'
@@ -433,23 +433,19 @@ export default class FormElementsEdit extends React.Component {
 
     function getAutoPopulateEditor() {
       return <div className="form-group">
-        <label className="" htmlFor="auto-populate-key">Auto Populate
-          Key</label>
-        <input
-          id="auto-populate-key"
-          placeholder="Enter populate key"
-          className="form-control"
-          type="text"
-          value={this_prefix_rule}
-          onChange={this.editElementProp.bind(
-            this,
-            'prefixRule',
-            'value',
-          )}
-        />
-        <small className="form-text text-muted">
-          Please refer to the auto-populate keys provided.
-        </small>
+        <label className="" htmlFor="auto-populate-key">Auto Populate</label>
+        <input id="auto-populate-key" placeholder="something" value={populateKey} onChange={this.editElementProp.bind(this, 'populateKey', 'value')}/>
+
+        {/*<select selectedOption={this_prefix_rule} id="auto-populate-key" className="form-control" onChange={this.editElementProp.bind(*/}
+        {/*  this,*/}
+        {/*  'populateKey',*/}
+        {/*  'selectedOption'*/}
+        {/*)}>*/}
+        {/*  <option selected disabled>Select data to populate</option>*/}
+        {/*  <option value="account_number">Account Number</option>*/}
+        {/*  <option value="account_name">Account Name</option>*/}
+        {/*  <option value="mobile_number">Mobile Number</option>*/}
+        {/*</select>*/}
       </div>;
     }
 

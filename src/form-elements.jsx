@@ -211,9 +211,7 @@ class AutoPopulate extends React.Component {
     if (this.props.data.pageBreakBefore) {
       baseClasses += ' alwaysbreak';
     }
-    if (this.props.read_only) {
-      props.disabled = 'disabled';
-    }
+    props.disabled = 'disabled';
 
     return (
       <div className={baseClasses}>
