@@ -3,7 +3,7 @@ import PlaceHolder from './form-place-holder';
 import BaseFormElements from './form-elements';
 
 const {
-  Header, Paragraph, Label, LineBreak, TextInput, NumberInput, TextArea, Dropdown, Checkboxes,
+  Header, Paragraph, Label, LineBreak, TextInput,AutoPopulate, NumberInput, TextArea, Dropdown, Checkboxes,
   DatePicker, RadioButtons, Image, Rating, Tags, Signature, HyperLink, Download, Camera, Range,Table
 } = BaseFormElements;
 
@@ -14,6 +14,7 @@ FormElements.Paragraph = SortableElement(Paragraph);
 FormElements.Label = SortableElement(Label);
 FormElements.LineBreak = SortableElement(LineBreak);
 FormElements.TextInput = SortableElement(TextInput);
+FormElements.AutoPopulate = SortableElement(AutoPopulate);
 FormElements.NumberInput = SortableElement(NumberInput);
 FormElements.TextArea = SortableElement(TextArea);
 FormElements.Dropdown = SortableElement(Dropdown);

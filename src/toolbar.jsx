@@ -414,7 +414,6 @@ export default class Toolbar extends React.Component {
         );
       }
     }
-    debugger;
     return elementOptions;
   }
 
