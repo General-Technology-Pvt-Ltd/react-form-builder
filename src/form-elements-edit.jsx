@@ -11,7 +11,18 @@ import { Editor } from "react-draft-wysiwyg";
 import DynamicOptionList from "./dynamic-option-list";
 import { get } from "./stores/requests";
 import ID from "./UUID";
-import { useState } from "react";
+
+// const ul = {
+//   listStyle: 'none',
+// 	marginLeft: '-0.5em',
+// 	marginRight:'-0.5em',
+// 	paddingLeft: '0',
+// }
+// const li = {
+// 	display:"inlineBlock",
+// 	marginLeft: "0.5em",
+// 	marginRight: "0.5em",
+// }
 
 const toolbar = {
   options: ["inline", "list", "textAlign", "fontSize", "link", "history"],
@@ -29,7 +40,28 @@ export default class FormElementsEdit extends React.Component {
       element: this.props.element,
       data: this.props.data,
       dirty: false,
+      tags: this.props.element.validationRule?this.props.element.validationRule:[],
+      validation:[],
     };
+  }
+
+  removeTag = (i) => {
+    const newTags = [ ...this.state.tags ];
+    newTags.splice(i, 1);
+    this.setState({ tags: newTags });
+  }
+
+  inputKeyDown = (e) => {
+    const val = e.target.value;
+    if (e.key === 'Enter' && val) {
+      if (this.state.tags.find(tag => tag.toLowerCase() === val.toLowerCase())) {
+        return;
+      }
+      this.setState({ tags: [...this.state.tags, val]});
+      this.tagInput.value = null;
+    } else if (e.key === 'Backspace' && !val) {
+      this.removeTag(this.state.tags.length - 1);
+    }
   }
 
   toggleRequired() {
@@ -40,12 +72,17 @@ export default class FormElementsEdit extends React.Component {
     // elemProperty could be content or label
     // targProperty could be value or checked
     const this_element = this.state.element;
+    // const this_tags= this.state.element.validationRule;
+    // console.log(this_tags);
     this_element[elemProperty] = e.target[targProperty];
+    this_element.validationRule = this.state.tags;
+    console.log(this_element.validationRule);
 
     this.setState(
       {
         element: this_element,
         dirty: true,
+        validation: [],
       },
       () => {
         if (targProperty === "checked") {
@@ -54,6 +91,11 @@ export default class FormElementsEdit extends React.Component {
       }
     );
   }
+
+// editValidationElementProp (elemProperty, targProperty, e){
+//   const this_element = this.state.element;
+//   this.setState([tags]);
+//   }
 
   onEditorStateChange(index, property, editorContent) {
     // const html = draftToHtml(convertToRaw(editorContent.getCurrentContent())).replace(/<p>/g, '<div>').replace(/<\/p>/g, '</div>');
@@ -110,6 +152,8 @@ export default class FormElementsEdit extends React.Component {
   }
 
   render() {
+    const { tags } = this.state;
+    console.log(tags);
     if (this.state.dirty) {
       this.props.element.dirty = true;
     }
@@ -160,6 +204,16 @@ export default class FormElementsEdit extends React.Component {
     )
       ? this.props.element.conditonalRule
       : "";
+      const this_prefix_rule = this.props.element.hasOwnProperty(
+        "prefixRule"
+      )
+        ? this.props.element.conditonalRule
+        : "";
+      const this_validation_rule = this.props.element.hasOwnProperty(
+        "validationRule"
+      )
+        ? this.props.element.validationRule
+        : [];
     const {
       canHavePageBreakBefore,
       canHaveAlternateForm,
@@ -328,6 +382,23 @@ export default class FormElementsEdit extends React.Component {
             {/* code start shubham */}
             {
               <div className="form-group">
+                <label className="" htmlFor="is-conditional-rule">Prefix</label>
+                <input
+                  id="is-conditional-rule"
+                  placeholder="eg: data.type == '1'? 1: 0"
+                  className="form-control"
+                  type="text"
+                  value={this_prefix_rule}
+                  onChange={this.editElementProp.bind(
+                    this,
+                    "prefixRule",
+                    "value"
+                  )}
+                />
+              </div>
+            }
+            {
+              <div className="form-group">
                 <label className="" htmlFor="field_name">Field Name (only alphabet, numbersand underscore. no spaces)</label>
                 <input
                   id="field_name"
@@ -360,6 +431,39 @@ export default class FormElementsEdit extends React.Component {
                 />
               </div>
             }
+             
+              <div className="form-group">
+             
+                <label className="" htmlFor="is-conditional-rule">Validation Rule</label>
+                {this.props.element.hasOwnProperty("validationRule") && (
+                <ul className="input-tag__tags">
+                { tags.map((tag, i) => (
+                  <li key={tag}>
+                    {tag}
+                    <button type="button" onClick={() => { this.removeTag(i); }}>x</button>
+                  </li>
+                ))}
+              </ul>)}
+              <input
+                  id="is-conditional-rule"
+                  placeholder="eg: data.type == '1'? 1: 0"
+                  className="form-control"
+                  type="text"
+                  name="validationRule[]"
+                  onKeyDown={this.inputKeyDown} 
+                  ref={c => { this.tagInput = c; }} 
+                  // value={[this.validation]}
+                  onChange={this.editElementProp.bind
+                    (
+                      this,
+                      "validationRule",
+                      "value",
+                      
+                    )
+                  }
+                />
+              </div>
+              
             {/*  code end shubham */}
             <div className="custom-control custom-checkbox">
               <input

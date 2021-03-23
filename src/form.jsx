@@ -8,7 +8,7 @@ import { EventEmitter } from "fbemitter";
 import FormValidator from "./form-validator";
 import FormElements from "./form-elements";
 
-const { Image, Checkboxes, Signature, Download, Camera,Table } = FormElements;
+const { Image, Checkboxes, Signature, Download, Camera,Table,Label } = FormElements;
 
 export default class ReactForm extends React.Component {
   form;
@@ -18,6 +18,7 @@ export default class ReactForm extends React.Component {
   answerData;
 
   constructor(props) {
+   
     super(props);
     this.answerData = this._convert(props.answer_data);
     this.emitter = new EventEmitter();
@@ -249,7 +250,9 @@ export default class ReactForm extends React.Component {
   }
 
   handleChange(event) {
+    console.log(this.props.data);
     let data = this.giveMeData('update')
+    console.log(data);
     this.setState({
       somedata: { ...this.state.data, ...data },
     })
@@ -258,6 +261,7 @@ export default class ReactForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const data = this._collectFormData(this.props.data);
+    console.log(data);
     //this.createJSONpara(data)
     let errors = [];
 
@@ -315,6 +319,11 @@ export default class ReactForm extends React.Component {
   getInputElement(item) {
     const Input = FormElements[item.element];
     return (
+      <>
+      {/* {item.prefixRule && item.prefixRule !==null?<input
+      defaultValue={item.prefixRule}
+      readOnly
+      />:null} */}
       <Input
         handleChange={this.handleChange}
         ref={(c) => (this.inputs[item.field_name] = c)}
@@ -322,8 +331,10 @@ export default class ReactForm extends React.Component {
         key={`form_${item.id}`}
         data={item}
         read_only={this.props.read_only}
-        defaultValue={this._getDefaultValue(item)}
+        //  defaultValue={this._getDefaultValue(item)}
+          defaultValue={item.prefixRule}
       />
+      </>
     );
   }
 
@@ -369,6 +380,7 @@ export default class ReactForm extends React.Component {
       }
       switch (item.element) {
         case "TextInput":
+        case "AutoPopulate":
         case "NumberInput":
         case "TextArea":
         case "Dropdown":

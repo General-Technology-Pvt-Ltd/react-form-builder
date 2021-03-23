@@ -185,6 +185,14 @@ export default class Toolbar extends React.Component {
         field_name: "text_input_",
       },
       {
+        key: "AutoPopulate",
+        canHaveAnswer: true,
+        name: "Auto Populate",
+        label: "Placeholder Label",
+        icon: "fas fa-font",
+        field_name: "auto_populate_",
+      },
+      {
         key: "NumberInput",
         canHaveAnswer: true,
         name: "Number Input",
@@ -406,7 +414,7 @@ export default class Toolbar extends React.Component {
         );
       }
     }
-
+    debugger;
     return elementOptions;
   }
 
