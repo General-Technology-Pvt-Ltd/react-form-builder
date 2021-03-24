@@ -9,7 +9,14 @@ import FormValidator from './form-validator';
 import FormElements from './form-elements';
 
 const {
-  Image, Checkboxes, Signature, Download, Camera, Table, Label, AutoPopulate,
+  Image,
+  Checkboxes,
+  Signature,
+  Download,
+  Camera,
+  Table,
+  Label,
+  AutoPopulate,
 } = FormElements;
 
 export default class ReactForm extends React.Component {
@@ -129,7 +136,8 @@ export default class ReactForm extends React.Component {
             incorrect = true;
           }
         } else if (
-          $item.value.toLowerCase() !== item.correct.trim().toLowerCase()
+          $item.value.toLowerCase() !== item.correct.trim()
+            .toLowerCase()
         ) {
           incorrect = true;
         }
@@ -250,24 +258,46 @@ export default class ReactForm extends React.Component {
     // validate(name, value);
     // this.state = {data:data,id:id };
     const data = this.giveMeData('update');
-    var result = Object.keys(data).map(e => ({id: e, value: data[e]}))
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', `http://localhost:8186/api/validation`, false);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    xhr.onreadystatechange = () => { 
-      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+    for (const property in data) {
+      if (event.target.name === property) {
+        console.log(`${property}: ${data[property]}`);
+        const xhr = new XMLHttpRequest();
+
+        //get form id from some meta tags.
+
+        xhr.open('POST', 'http://localhost:8181/api/validate', false);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send(`formId=1&fieldId=${property}&value=${data[property]}`);
+        if (xhr.status === 200) {
+          console.log(JSON.parse(xhr.responseText));
+        } else if (xhr.status === 412) {
+          const response = JSON.parse(xhr.responseText);
+          const error = response.data.errors[0];
+          const parent = event.target.parentElement;
+
+          // if an error block exists replace the message on error block.
+          // if success remove the error block
+          // if not exists create a new error block.
+
+          let errorMessage = document.createElement('span');
+          errorMessage.innerHTML = error;
+          parent.appendChild(errorMessage);
+        } else {
+          console.log('failed to validate');
+        }
       }
     }
- console.log(result);
-  xhr.send(result);
-      // if (xhr.status === 200) {
-      //   const response = JSON.parse(xhr.responseText);
-      //   return response.data;
-      // }else {
-      //   alert('failed to post data');
-      // }
-    // }
-  // }
+
+    // send the data to server
+    // check if the response has any validation errors.
+    // if the response has validation errors.
+    // show error to the user.
+
+    // var result = Object.keys(data).map(e => ({id: e, value: data[e]}))
+    // let xhr = new XMLHttpRequest();
+    // xhr.open('POST', `http://localhost:8181/api/validation`, false);
+    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    // xhr.send(null);
 
     this.setState({
       somedata: { ...this.state.data, ...data },
@@ -334,46 +364,46 @@ export default class ReactForm extends React.Component {
     const Input = FormElements[item.element];
     return (
       <>
-      {/* {item.prefixRule && item.prefixRule !==null?<input
+        {/* {item.prefixRule && item.prefixRule !==null?<input
       defaultValue={item.prefixRule}
       readOnly
       />:null} */}
-      <Input
-        name="input"
-        value={item}
-        handleChange={this.handleChange}
-        ref={(c) => (this.inputs[item.field_name] = c)}
-        mutable={true}
-        key={`form_${item.id}`}
-        data={item}
-        read_only={this.props.read_only}
-         defaultValue={this._getDefaultValue(item)}
-      />
+        <Input
+          name="input"
+          value={item}
+          handleChange={this.handleChange}
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          read_only={this.props.read_only}
+          defaultValue={this._getDefaultValue(item)}
+        />
       </>
     );
   }
 
   getAutoPopulateElement(item) {
     let autoCompleteValue;
-    if(item.element === "AutoPopulate"){
+    if (item.element === 'AutoPopulate') {
       try {
         const getDataFromServer = () => {
           let xhr = new XMLHttpRequest();
           xhr.open('GET', `http://localhost:8186/api/auto-populate?field=${item.populateKey}`, false);
-          xhr.setRequestHeader('Authorization', 'Bearer ')
+          xhr.setRequestHeader('Authorization', 'Bearer ');
           xhr.send(null);
           if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             return response.data;
-          }else {
+          } else {
             alert('failed to populate');
           }
         };
-    
+
         autoCompleteValue = getDataFromServer();
         console.log(autoCompleteValue);
-      } catch(e) {
-        console.log("Failed to populate data");
+      } catch (e) {
+        console.log('Failed to populate data');
       }
     }
 
@@ -400,7 +430,7 @@ export default class ReactForm extends React.Component {
 
   getSimpleElement(item) {
     const Element = FormElements[item.element];
-    return <Element mutable={true} key={`form_${item.id}`} data={item} />;
+    return <Element mutable={true} key={`form_${item.id}`} data={item}/>;
   }
 
   render() {
@@ -419,7 +449,7 @@ export default class ReactForm extends React.Component {
       ) {
         this.answerData[item.field_name] = this.props.variables[
           item.variableKey
-        ];
+          ];
       }
     });
 
@@ -538,7 +568,7 @@ export default class ReactForm extends React.Component {
 
     return (
       <div>
-        <FormValidator emitter={this.emitter} />
+        <FormValidator emitter={this.emitter}/>
         <div className="react-form-builder-form">
           <form
             encType="multipart/form-data"
@@ -551,7 +581,7 @@ export default class ReactForm extends React.Component {
             {/* <label>this is for test preivew</label> */}
             {this.props.authenticity_token && (
               <div style={formTokenStyle}>
-                <input name="utf8" type="hidden" value="&#x2713;" />
+                <input name="utf8" type="hidden" value="&#x2713;"/>
                 <input
                   name="authenticity_token"
                   type="hidden"
