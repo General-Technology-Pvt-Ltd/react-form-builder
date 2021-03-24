@@ -64,8 +64,6 @@ export default class FormElementsEdit extends React.Component {
     // console.log(this_tags);
     this_element[elemProperty] = e.target[targProperty];
     this_element.validationRule = this.state.tags;
-    console.log(this_element.validationRule);
-
     this.setState(
       {
         element: this_element,
@@ -226,7 +224,6 @@ export default class FormElementsEdit extends React.Component {
     if (this.props.element.hasOwnProperty('label')) {
       editorState = this.convertFromHTML(this.props.element.label);
     }
-    console.log(this.props.element);
 
     function getContentEditor() {
       return <div className="form-group">
@@ -434,8 +431,12 @@ export default class FormElementsEdit extends React.Component {
     function getAutoPopulateEditor() {
       return <div className="form-group">
         <label className="" htmlFor="auto-populate-key">Auto Populate</label>
-        <input id="auto-populate-key" placeholder="something" value={populateKey} onChange={this.editElementProp.bind(this, 'populateKey', 'value')}/>
-
+        <select onChange={this.editElementProp.bind(this, 'populateKey', 'value')} id="auto-populate-key" className="form-control">
+        <option value="">-----Select One Option-----</option>
+        <option value="account_number">By Account</option>
+        <option value="mobile_number">By Mobile</option>
+        <option value="username">By Username</option>
+      </select>
         {/*<select selectedOption={this_prefix_rule} id="auto-populate-key" className="form-control" onChange={this.editElementProp.bind(*/}
         {/*  this,*/}
         {/*  'populateKey',*/}

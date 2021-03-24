@@ -247,9 +247,28 @@ export default class ReactForm extends React.Component {
   }
 
   handleChange(event) {
-    console.log(this.props.data);
+    // validate(name, value);
+    // this.state = {data:data,id:id };
     const data = this.giveMeData('update');
-    console.log(data);
+    var result = Object.keys(data).map(e => ({id: e, value: data[e]}))
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', `http://localhost:8186/api/validation`, false);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    xhr.onreadystatechange = () => { 
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+      }
+    }
+ console.log(result);
+  xhr.send(result);
+      // if (xhr.status === 200) {
+      //   const response = JSON.parse(xhr.responseText);
+      //   return response.data;
+      // }else {
+      //   alert('failed to post data');
+      // }
+    // }
+  // }
+
     this.setState({
       somedata: { ...this.state.data, ...data },
     });
@@ -258,7 +277,6 @@ export default class ReactForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const data = this._collectFormData(this.props.data);
-    console.log(data);
     // this.createJSONpara(data)
     let errors = [];
 
@@ -321,34 +339,44 @@ export default class ReactForm extends React.Component {
       readOnly
       />:null} */}
       <Input
+        name="input"
+        value={item}
         handleChange={this.handleChange}
         ref={(c) => (this.inputs[item.field_name] = c)}
         mutable={true}
         key={`form_${item.id}`}
         data={item}
         read_only={this.props.read_only}
-        //  defaultValue={this._getDefaultValue(item)}
-          defaultValue={item.prefixRule}
+         defaultValue={this._getDefaultValue(item)}
       />
       </>
     );
   }
 
   getAutoPopulateElement(item) {
-    const getDataFromServer = () => {
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', `http://localhost:8181/api/auto-populate?field=${item.populateKey}`, false);
-      // xhr.setRequestHeader('Authorization', 'Bearer ')
-      xhr.send(null);
-      if (xhr.status === 200) {
-        const response = JSON.parse(xhr.responseText);
-        return response.data;
-      }else {
-        alert('failed to populate data');
+    let autoCompleteValue;
+    if(item.element === "AutoPopulate"){
+      try {
+        const getDataFromServer = () => {
+          let xhr = new XMLHttpRequest();
+          xhr.open('GET', `http://localhost:8186/api/auto-populate?field=${item.populateKey}`, false);
+          xhr.setRequestHeader('Authorization', 'Bearer ')
+          xhr.send(null);
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            return response.data;
+          }else {
+            alert('failed to populate');
+          }
+        };
+    
+        autoCompleteValue = getDataFromServer();
+        console.log(autoCompleteValue);
+      } catch(e) {
+        console.log("Failed to populate data");
       }
-    };
+    }
 
-    const autoCompleteValue = getDataFromServer();
     return (
       <>
         {/* {item.prefixRule && item.prefixRule !==null?<input
@@ -362,7 +390,8 @@ export default class ReactForm extends React.Component {
           data={item}
           read_only={false}
           //  defaultValue={this._getDefaultValue(item)}
-          defaultValue={autoCompleteValue}
+          defaultValue={autoCompleteValue ? autoCompleteValue : null}
+          // defaultValue={item.populateKey}
         />
       </>
     );

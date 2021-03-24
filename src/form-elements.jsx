@@ -178,7 +178,6 @@ class TextInput extends React.Component {
     if (this.props.read_only) {
       props.disabled = 'disabled';
     }
-
     return (
       <div className={baseClasses}>
         <ComponentHeader {...this.props} />
@@ -211,8 +210,9 @@ class AutoPopulate extends React.Component {
     if (this.props.data.pageBreakBefore) {
       baseClasses += ' alwaysbreak';
     }
+    if (this.props.data.element=== 'AutoPopulate'){
     props.disabled = 'disabled';
-
+    }
     return (
       <div className={baseClasses}>
         <ComponentHeader {...this.props} />
@@ -881,7 +881,7 @@ class Camera extends React.Component {
         sourceDataURL = `data:image/png;base64,${this.props.defaultValue}`;
       }
     }
-    console.log('sourceDataURL', sourceDataURL);
+  
     return (
       <div className={baseClasses}>
         <ComponentHeader {...this.props} />
