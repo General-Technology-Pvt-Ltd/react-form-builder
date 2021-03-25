@@ -260,7 +260,7 @@ export default class Toolbar extends React.Component {
       },
       {
         key: 'Download',
-        name: 'File Attachment',
+        name: 'File Upload',
         icon: 'fas fa-file',
         static: true,
         content: 'Placeholder file name ...',
