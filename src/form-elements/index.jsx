@@ -11,7 +11,6 @@ import DatePicker from './date-picker';
 import ComponentHeader from './component-header';
 import ComponentLabel from './component-label';
 import myxss from './myxss';
-import { format, parse } from 'date-fns';
 
 import ID from './UUID';
 

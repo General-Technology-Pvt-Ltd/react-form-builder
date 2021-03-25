@@ -605,7 +605,7 @@ export default class ReactForm extends React.Component {
                   value={this.props.task_id}
                 />
               </div>
-            )}
+            }
             {items}
             <div className="btn-toolbar">
               {!this.props.hide_actions && (

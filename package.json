@@ -27,7 +27,7 @@
     "beedle": "^0.8.1",
     "classnames": "^2.2.6",
     "date-fns": "^2.16.1",
-    "draft-js": "^0.11.7",
+    "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "es6-promise": "^4.2.8",
     "fbemitter": "^3.0.0",
@@ -41,7 +41,6 @@
     "react-draft-wysiwyg": "~1.13.2",
     "react-select": "^3.2.0",
     "react-signature-canvas": "^1.0.3",
-    "react-star-rating": "^1.4.2",
     "react-textarea-autosize": "^7.1.2",
     "xss": "^1.0.8"
   },
