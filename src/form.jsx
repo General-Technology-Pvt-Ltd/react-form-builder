@@ -34,6 +34,7 @@ export default class ReactForm extends React.Component {
     this.state = {
       somedata: null,
       reload: '',
+      count: 0
     };
   }
 
@@ -260,45 +261,36 @@ export default class ReactForm extends React.Component {
     const data = this.giveMeData('update');
     for (const property in data) {
       if (event.target.name === property) {
-        console.log(`${property}: ${data[property]}`);
         const xhr = new XMLHttpRequest();
+        const errId = `errror-message-${property}`
+        const parent = event.target.parentElement;
+        const errorElement = parent.querySelector(`#${errId}`);
 
-        //get form id from some meta tags.
-
-        xhr.open('POST', 'http://localhost:8181/api/validate', false);
+        xhr.open('POST', 'http://localhost:8186/api/validate', false);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send(`formId=1&fieldId=${property}&value=${data[property]}`);
         if (xhr.status === 200) {
-          console.log(JSON.parse(xhr.responseText));
+          if(errorElement){
+            parent.removeChild(errorElement);
+          }
         } else if (xhr.status === 412) {
           const response = JSON.parse(xhr.responseText);
           const error = response.data.errors[0];
-          const parent = event.target.parentElement;
-
-          // if an error block exists replace the message on error block.
-          // if success remove the error block
-          // if not exists create a new error block.
-
-          let errorMessage = document.createElement('span');
-          errorMessage.innerHTML = error;
-          parent.appendChild(errorMessage);
+          if(errorElement){
+            errorElement.innerText = error;
+          }else {
+            let errorMessage = document.createElement('span');
+            errorMessage.style = ('color:red'); 
+            errorMessage.className = 'text-danger';
+            errorMessage.id=errId
+            errorMessage.innerText = error;
+            parent.appendChild(errorMessage);
+          }
         } else {
           console.log('failed to validate');
         }
       }
     }
-
-    // send the data to server
-    // check if the response has any validation errors.
-    // if the response has validation errors.
-    // show error to the user.
-
-    // var result = Object.keys(data).map(e => ({id: e, value: data[e]}))
-    // let xhr = new XMLHttpRequest();
-    // xhr.open('POST', `http://localhost:8181/api/validation`, false);
-    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    // xhr.send(null);
-
     this.setState({
       somedata: { ...this.state.data, ...data },
     });
