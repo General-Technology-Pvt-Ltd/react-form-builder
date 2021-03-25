@@ -2,10 +2,10 @@
  * <Toolbar />
  */
 
-import React from "react";
-import ToolbarItem from "./toolbar-draggable-item";
-import ID from "./UUID";
-import store from "./stores/store";
+import React from 'react';
+import ToolbarItem from './toolbar-draggable-item';
+import ID from './UUID';
+import store from './stores/store';
 
 export default class Toolbar extends React.Component {
   constructor(props) {
@@ -21,88 +21,88 @@ export default class Toolbar extends React.Component {
 
   static _defaultItemOptions(element) {
     switch (element) {
-      case "Dropdown":
+      case 'Dropdown':
         return [
           {
-            value: "place_holder_option_1",
-            text: "Place holder option 1",
+            value: 'place_holder_option_1',
+            text: 'Place holder option 1',
             key: `dropdown_option_${ID.uuid()}`,
           },
           {
-            value: "place_holder_option_2",
-            text: "Place holder option 2",
+            value: 'place_holder_option_2',
+            text: 'Place holder option 2',
             key: `dropdown_option_${ID.uuid()}`,
           },
           {
-            value: "place_holder_option_3",
-            text: "Place holder option 3",
+            value: 'place_holder_option_3',
+            text: 'Place holder option 3',
             key: `dropdown_option_${ID.uuid()}`,
           },
         ];
-      case "Tags":
+      case 'Tags':
         return [
           {
-            value: "place_holder_tag_1",
-            text: "Place holder tag 1",
+            value: 'place_holder_tag_1',
+            text: 'Place holder tag 1',
             key: `tags_option_${ID.uuid()}`,
           },
           {
-            value: "place_holder_tag_2",
-            text: "Place holder tag 2",
+            value: 'place_holder_tag_2',
+            text: 'Place holder tag 2',
             key: `tags_option_${ID.uuid()}`,
           },
           {
-            value: "place_holder_tag_3",
-            text: "Place holder tag 3",
+            value: 'place_holder_tag_3',
+            text: 'Place holder tag 3',
             key: `tags_option_${ID.uuid()}`,
           },
         ];
-      case "Checkboxes":
+      case 'Checkboxes':
         return [
           {
-            value: "place_holder_option_1",
-            text: "Place holder option 1",
+            value: 'place_holder_option_1',
+            text: 'Place holder option 1',
             key: `checkboxes_option_${ID.uuid()}`,
           },
           {
-            value: "place_holder_option_2",
-            text: "Place holder option 2",
+            value: 'place_holder_option_2',
+            text: 'Place holder option 2',
             key: `checkboxes_option_${ID.uuid()}`,
           },
           {
-            value: "place_holder_option_3",
-            text: "Place holder option 3",
+            value: 'place_holder_option_3',
+            text: 'Place holder option 3',
             key: `checkboxes_option_${ID.uuid()}`,
           },
         ];
-      case "RadioButtons":
+      case 'RadioButtons':
         return [
           {
-            value: "place_holder_option_1",
-            text: "Place holder option 1",
+            value: 'place_holder_option_1',
+            text: 'Place holder option 1',
             key: `radiobuttons_option_${ID.uuid()}`,
           },
           {
-            value: "place_holder_option_2",
-            text: "Place holder option 2",
+            value: 'place_holder_option_2',
+            text: 'Place holder option 2',
             key: `radiobuttons_option_${ID.uuid()}`,
           },
           {
-            value: "place_holder_option_3",
-            text: "Place holder option 3",
+            value: 'place_holder_option_3',
+            text: 'Place holder option 3',
             key: `radiobuttons_option_${ID.uuid()}`,
           },
         ];
-      case "Table":
+      case 'Table':
         return [
           {
-            text: "Table header 1",
-            value: "",
+            text: 'Table header 1',
+            value: '',
             key: `table_option_${ID.uuid()}`,
           },
           {
-            text: "Table header 2",
-            value: "",
+            text: 'Table header 2',
+            value: '',
             key: `table_option_${ID.uuid()}`,
           },
         ];
@@ -114,174 +114,187 @@ export default class Toolbar extends React.Component {
   _defaultItems() {
     return [
       {
-        key: "Header",
-        name: "Header Text",
-        icon: "fas fa-heading",
+        key: 'Header',
+        name: 'Header Text',
+        icon: 'fas fa-heading',
         static: true,
-        content: "Placeholder Text...",
+        content: 'Placeholder Text...',
       },
       {
-        key: "Label",
-        name: "Label",
+        key: 'Label',
+        name: 'Label',
         static: true,
-        icon: "fas fa-font",
-        content: "Placeholder Text...",
+        icon: 'fas fa-font',
+        content: 'Placeholder Text...',
       },
       {
-        key: "Paragraph",
-        name: "Paragraph",
+        key: 'Paragraph',
+        name: 'Paragraph',
         static: true,
-        icon: "fas fa-paragraph",
-        content: "Placeholder Text...",
+        icon: 'fas fa-paragraph',
+        content: 'Placeholder Text...',
       },
       {
-        key: "LineBreak",
-        name: "Line Break",
+        key: 'LineBreak',
+        name: 'Line Break',
         static: true,
-        icon: "fas fa-arrows-alt-h",
+        icon: 'fas fa-arrows-alt-h',
       },
       {
-        key: "Dropdown",
+        key: 'Dropdown',
         canHaveAnswer: true,
-        name: "Dropdown",
-        icon: "far fa-caret-square-down",
-        label: "Placeholder Label",
-        field_name: "dropdown_",
+        name: 'Dropdown',
+        icon: 'far fa-caret-square-down',
+        label: 'Placeholder Label',
+        field_name: 'dropdown_',
         options: [],
       },
       {
-        key: "Tags",
+        key: 'Tags',
         canHaveAnswer: true,
-        name: "Tags",
-        icon: "fas fa-tags",
-        label: "Placeholder Label",
-        field_name: "tags_",
+        name: 'Tags',
+        icon: 'fas fa-tags',
+        label: 'Placeholder Label',
+        field_name: 'tags_',
         options: [],
       },
       {
-        key: "Checkboxes",
+        key: 'Checkboxes',
         canHaveAnswer: true,
-        name: "Checkboxes",
-        icon: "far fa-check-square",
-        label: "Placeholder Label",
-        field_name: "checkboxes_",
+        name: 'Checkboxes',
+        icon: 'far fa-check-square',
+        label: 'Placeholder Label',
+        field_name: 'checkboxes_',
         options: [],
       },
       {
-        key: "RadioButtons",
+        key: 'RadioButtons',
         canHaveAnswer: true,
-        name: "Multiple Choice",
-        icon: "far fa-dot-circle",
-        label: "Placeholder Label",
-        field_name: "radiobuttons_",
+        name: 'Multiple Choice',
+        icon: 'far fa-dot-circle',
+        label: 'Placeholder Label',
+        field_name: 'radiobuttons_',
         options: [],
       },
       {
-        key: "TextInput",
+        key: 'TextInput',
         canHaveAnswer: true,
-        name: "Text Input",
-        label: "Placeholder Label",
-        icon: "fas fa-font",
-        field_name: "text_input_",
+        name: 'Text Input',
+        label: 'Placeholder Label',
+        icon: 'fas fa-font',
+        field_name: 'text_input_',
+        shouldBeValidated: true,
       },
       {
-        key: "NumberInput",
+        key: 'AutoPopulate',
         canHaveAnswer: true,
-        name: "Number Input",
-        label: "Placeholder Label",
-        icon: "fas fa-plus",
-        field_name: "number_input_",
+        name: 'Auto Populate',
+        label: 'Placeholder Label',
+        icon: 'fas fa-font',
+        field_name: 'auto_populate_',
+        canReadOnly: true,
+        canBeRequired: false,
+        canHavePageBreakBefore: false,
+        canEditFieldName: false,
       },
       {
-        key: "TextArea",
+        key: 'NumberInput',
         canHaveAnswer: true,
-        name: "Multi-line Input",
-        label: "Placeholder Label",
-        icon: "fas fa-text-height",
-        field_name: "text_area_",
+        name: 'Number Input',
+        label: 'Placeholder Label',
+        icon: 'fas fa-plus',
+        field_name: 'number_input_',
       },
       {
-        key: "Image",
-        name: "Image",
-        label: "",
-        icon: "far fa-image",
-        field_name: "image_",
-        src: "",
-      },
-      {
-        key: "Rating",
+        key: 'TextArea',
         canHaveAnswer: true,
-        name: "Rating",
-        label: "Placeholder Label",
-        icon: "fas fa-star",
-        field_name: "rating_",
+        name: 'Multi-line Input',
+        label: 'Placeholder Label',
+        icon: 'fas fa-text-height',
+        field_name: 'text_area_',
       },
       {
-        key: "DatePicker",
+        key: 'Image',
+        name: 'Image',
+        label: '',
+        icon: 'far fa-image',
+        field_name: 'image_',
+        src: '',
+      },
+      {
+        key: 'Rating',
+        canHaveAnswer: true,
+        name: 'Rating',
+        label: 'Placeholder Label',
+        icon: 'fas fa-star',
+        field_name: 'rating_',
+      },
+      {
+        key: 'DatePicker',
         canDefaultToday: true,
         canReadOnly: true,
-        dateFormat: "MM/dd/yyyy",
-        timeFormat: "hh:mm aa",
+        dateFormat: 'MM/dd/yyyy',
+        timeFormat: 'hh:mm aa',
         showTimeSelect: false,
         showTimeSelectOnly: false,
-        name: "Date",
-        icon: "far fa-calendar-alt",
-        label: "Placeholder Label",
-        field_name: "date_picker_",
+        name: 'Date',
+        icon: 'far fa-calendar-alt',
+        label: 'Placeholder Label',
+        field_name: 'date_picker_',
       },
       {
-        key: "Signature",
+        key: 'Signature',
         canReadOnly: true,
-        name: "Signature",
-        icon: "fas fa-pen-square",
-        label: "Signature",
-        field_name: "signature_",
+        name: 'Signature',
+        icon: 'fas fa-pen-square',
+        label: 'Signature',
+        field_name: 'signature_',
       },
       {
-        key: "HyperLink",
-        name: "Web site",
-        icon: "fas fa-link",
+        key: 'HyperLink',
+        name: 'Web site',
+        icon: 'fas fa-link',
         static: true,
-        content: "Placeholder Web site link ...",
-        href: "http://www.example.com",
+        content: 'Placeholder Web site link ...',
+        href: 'http://www.example.com',
       },
       {
-        key: "Download",
-        name: "File Attachment",
-        icon: "fas fa-file",
+        key: 'Download',
+        name: 'File Attachment',
+        icon: 'fas fa-file',
         static: true,
-        content: "Placeholder file name ...",
-        field_name: "download_",
-        file_path: "",
-        _href: "",
+        content: 'Placeholder file name ...',
+        field_name: 'download_',
+        file_path: '',
+        _href: '',
       },
       {
-        key: "Range",
-        name: "Range",
-        icon: "fas fa-sliders-h",
-        label: "Placeholder Label",
-        field_name: "range_",
+        key: 'Range',
+        name: 'Range',
+        icon: 'fas fa-sliders-h',
+        label: 'Placeholder Label',
+        field_name: 'range_',
         step: 1,
         default_value: 3,
         min_value: 1,
         max_value: 5,
-        min_label: "Easy",
-        max_label: "Difficult",
+        min_label: 'Easy',
+        max_label: 'Difficult',
       },
       {
-        key: "Camera",
-        name: "Camera",
-        icon: "fas fa-camera",
-        label: "Placeholder Label",
-        field_name: "camera_",
+        key: 'Camera',
+        name: 'Camera',
+        icon: 'fas fa-camera',
+        label: 'Placeholder Label',
+        field_name: 'camera_',
       },
       {
-        key: "Table",
+        key: 'Table',
         // canHaveAnswer: true,
-        name: "Table",
-        icon: "fa fa-table",
+        name: 'Table',
+        icon: 'fa fa-table',
         // label: "Placeholder Label",
-        field_name: "table_",
+        field_name: 'table_',
         options: [],
         rows: [],
       },
@@ -302,6 +315,8 @@ export default class Toolbar extends React.Component {
       elementOptions.showDescription = true;
     }
 
+
+
     if (item.static) {
       elementOptions.bold = false;
       elementOptions.italic = false;
@@ -309,6 +324,10 @@ export default class Toolbar extends React.Component {
 
     if (item.canHaveAnswer) {
       elementOptions.canHaveAnswer = item.canHaveAnswer;
+    }
+
+    if (item.shouldBeValidated) {
+      elementOptions.shouldBeValidated = true;
     }
 
     if (item.canReadOnly) {
@@ -327,6 +346,9 @@ export default class Toolbar extends React.Component {
       elementOptions.href = item.href;
     }
 
+    elementOptions.canBeRequired = item.hasOwnProperty('canBeRequired') ? item.canBeRequired : true;
+    elementOptions.canEditFieldName = item.hasOwnProperty('canEditFieldName') ? item.canEditFieldName : true;
+
     elementOptions.canHavePageBreakBefore =
       item.canHavePageBreakBefore !== false;
     elementOptions.canHaveAlternateForm = item.canHaveAlternateForm !== false;
@@ -339,23 +361,23 @@ export default class Toolbar extends React.Component {
     }
     elementOptions.canPopulateFromApi = item.canPopulateFromApi !== false;
 
-    if (item.key === "Image") {
+    if (item.key === 'Image') {
       elementOptions.src = item.src;
     }
 
-    if (item.key === "DatePicker") {
+    if (item.key === 'DatePicker') {
       elementOptions.dateFormat = item.dateFormat;
       elementOptions.timeFormat = item.timeFormat;
       elementOptions.showTimeSelect = item.showTimeSelect;
       elementOptions.showTimeSelectOnly = item.showTimeSelectOnly;
     }
 
-    if (item.key === "Download") {
+    if (item.key === 'Download') {
       elementOptions._href = item._href;
       elementOptions.file_path = item.file_path;
     }
 
-    if (item.key === "Range") {
+    if (item.key === 'Range') {
       elementOptions.step = item.step;
       elementOptions.default_value = item.default_value;
       elementOptions.min_value = item.min_value;
@@ -364,10 +386,10 @@ export default class Toolbar extends React.Component {
       elementOptions.max_label = item.max_label;
     }
 
-    if (item.key === "Table") {
+    if (item.key === 'Table') {
       elementOptions.options = Toolbar._defaultItemOptions(
         elementOptions.element
-      )
+      );
       elementOptions.rows = item.rows;
       // elementOptions.rows = [
       //   {
@@ -406,13 +428,12 @@ export default class Toolbar extends React.Component {
         );
       }
     }
-
     return elementOptions;
   }
 
   _onClick(item) {
     // ElementActions.createElement(this.create(item));
-    store.dispatch("create", this.create(item));
+    store.dispatch('create', this.create(item));
   }
 
   render() {

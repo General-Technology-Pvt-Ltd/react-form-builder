@@ -14,7 +14,9 @@ const {
   Signature,
   Download,
   Camera,
-  Table
+  Table,
+  Label,
+  AutoPopulate,
 } = FormElements;
 
 export default class ReactForm extends React.Component {
@@ -36,10 +38,10 @@ export default class ReactForm extends React.Component {
   }
 
   componentDidMount() {
-    let data = this.giveMeData('update');
+    const data = this.giveMeData('update');
     this.setState({
       somedata: { ...this.state.somedata, ...data },
-      reload: ''
+      reload: '',
     });
   }
 
@@ -47,7 +49,7 @@ export default class ReactForm extends React.Component {
     if (nextProps.data !== this.props.data) {
       const data = this.giveMeData('update');
       this.setState({
-        somedata: { ...this.state.somedata, ...data }
+        somedata: { ...this.state.somedata, ...data },
       });
     }
   }
@@ -120,7 +122,7 @@ export default class ReactForm extends React.Component {
       if (item.element === 'Checkboxes' || item.element === 'RadioButtons') {
         item.options.forEach((option) => {
           const $option = ReactDOM.findDOMNode(
-            ref.options[`child_ref_${option.key}`]
+            ref.options[`child_ref_${option.key}`],
           );
           if (
             (option.hasOwnProperty('correct') && !$option.checked) ||
@@ -154,7 +156,7 @@ export default class ReactForm extends React.Component {
         let checked_options = 0;
         item.options.forEach((option) => {
           const $option = ReactDOM.findDOMNode(
-            ref.options[`child_ref_${option.key}`]
+            ref.options[`child_ref_${option.key}`],
           );
           if ($option.checked) {
             checked_options += 1;
@@ -181,14 +183,14 @@ export default class ReactForm extends React.Component {
   _collect(item, check = null) {
     const itemData = { name: item.field_name };
     const ref = this.inputs[item.field_name];
-    if (ref == undefined) {
+    if (ref === undefined) {
       return null;
     }
     if (item.element === 'Checkboxes' || item.element === 'RadioButtons') {
       const checked_options = [];
       item.options.forEach((option) => {
         const $option = ReactDOM.findDOMNode(
-          ref.options[`child_ref_${option.key}`]
+          ref.options[`child_ref_${option.key}`],
         );
         if ($option.checked) {
           if (check) {
@@ -199,7 +201,7 @@ export default class ReactForm extends React.Component {
         }
       });
       itemData.value = checked_options;
-    } else if (item.element == 'Table') {
+    } else if (item.element === 'Table') {
       itemData.value = item.rows;
     } else if (item.element === 'Download') {
       itemData.value = this._getItemValue(item, ref).value;
@@ -241,25 +243,56 @@ export default class ReactForm extends React.Component {
   giveMeData(check = null) {
     let obj = {};
     this.props.data.map((dat) => {
+      dat.field_name = dat.field_name.replaceAll('-', '_');
       if (dat !== null) {
-
         let pair;
-        let vala = this._collect(dat, check);
+        const vala = this._collect(dat, check);
         if (vala != null) {
           dat.field_name = dat.field_name.replaceAll('-', '_');
-          let fn = dat.field_name;
-          let str = `pair = {${fn}: "${vala.value}"};`;
+          const fn = dat.field_name;
+          const str = `pair = {${fn}: "${vala.value}"};`;
           eval(str);
           obj = { ...obj, ...pair };
         }
       }
-
     });
     return obj;
   }
 
   handleChange(event) {
-    let data = this.giveMeData('update');
+    const data = this.giveMeData('update');
+    for (const property in data) {
+      if (event.target.name === property) {
+        const xhr = new XMLHttpRequest();
+        const errId = `errror-message-${property}`
+        const parent = event.target.parentElement;
+        const errorElement = parent.querySelector(`#${errId}`);
+
+        xhr.open('POST', 'http://localhost:8186/api/validate', false);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send(`formId=1&fieldId=${property}&value=${data[property]}`);
+        if (xhr.status === 200) {
+          if(errorElement){
+            parent.removeChild(errorElement);
+          }
+        } else if (xhr.status === 412) {
+          const response = JSON.parse(xhr.responseText);
+          const error = response.data.errors[0];
+          if(errorElement){
+            errorElement.innerText = error;
+          }else {
+            let errorMessage = document.createElement('span');
+            errorMessage.style = ('color:red');
+            errorMessage.className = 'text-danger';
+            errorMessage.id=errId
+            errorMessage.innerText = error;
+            parent.appendChild(errorMessage);
+          }
+        } else {
+          console.log('failed to validate');
+        }
+      }
+    }
     this.setState({
       somedata: { ...this.state.data, ...data },
     });
@@ -268,7 +301,6 @@ export default class ReactForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const data = this._collectFormData(this.props.data);
-    //this.createJSONpara(data)
     let errors = [];
 
     if (!this.props.skip_validations) {
@@ -297,8 +329,6 @@ export default class ReactForm extends React.Component {
   validateForm() {
     const errors = [];
     let data_items = this.props.data;// } else {
-    //   const $form = ReactDOM.findDOMNode(this.form);
-    //   $form.submit();
 
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
@@ -336,6 +366,45 @@ export default class ReactForm extends React.Component {
     );
   }
 
+  getAutoPopulateElement(item) {
+    let autoCompleteValue;
+    if (item.element === 'AutoPopulate') {
+      try {
+        const getDataFromServer = () => {
+          let xhr = new XMLHttpRequest();
+          xhr.open('GET', `http://localhost:8186/api/auto-populate?field=${item.populateKey}`, false);
+          xhr.setRequestHeader('Authorization', 'Bearer ');
+          xhr.send(null);
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            return response.data;
+          } else {
+            alert('failed to populate');
+          }
+        };
+
+        autoCompleteValue = getDataFromServer();
+        console.log(autoCompleteValue);
+      } catch (e) {
+        console.log('Failed to populate data');
+      }
+    }
+
+    return (
+      <>
+        <AutoPopulate
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          read_only={false}
+          defaultValue={autoCompleteValue ? autoCompleteValue : null}
+        />
+      </>
+    );
+  }
+
+
   getSimpleElement(item) {
     const Element = FormElements[item.element];
     return <Element mutable={true} key={`form_${item.id}`} data={item}/>;
@@ -366,7 +435,7 @@ export default class ReactForm extends React.Component {
         return null;
       }
 
-      let data = this.state.somedata;
+      const data = this.state.somedata;
 
       if (!item) return null;
       if (item.conditonalRule) {
@@ -378,6 +447,8 @@ export default class ReactForm extends React.Component {
       }
       switch (item.element) {
         case 'TextInput':
+        case 'AutoPopulate':
+          return this.getAutoPopulateElement(item);
         case 'NumberInput':
         case 'TextArea':
         case 'Dropdown':
