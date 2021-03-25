@@ -7,6 +7,9 @@ import ReactDOM from 'react-dom';
 import { EventEmitter } from 'fbemitter';
 import FormValidator from './form-validator';
 import FormElements from './form-elements';
+import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from './multi-column';
+import CustomElement from './form-elements/custom-element';
+import Registry from './stores/registry';
 
 const {
   Image,
@@ -30,6 +33,7 @@ export default class ReactForm extends React.Component {
     super(props);
     this.answerData = this._convert(props.answer_data);
     this.emitter = new EventEmitter();
+    this.getDataById = this.getDataById.bind(this);
 
     this.state = {
       somedata: null,
@@ -66,7 +70,7 @@ export default class ReactForm extends React.Component {
       });
       return result;
     }
-    return answers;
+    return answers || {};
   }
 
   _getDefaultValue(item) {
@@ -100,16 +104,13 @@ export default class ReactForm extends React.Component {
     } else if (item.element === 'DatePicker') {
       $item.value = ref.state.value;
     } else if (item.element === 'Camera') {
-      $item.value = ref.state.img
-        ? ref.state.img.replace('data:image/png;base64,', '')
-        : '';
+      $item.value = ref.state.img ? ref.state.img.replace('data:image/png;base64,', '') : '';
     } else if (item.element === 'Download') {
       $item.value = ref.state.value;
-    } else if (ref && ref.inputField) {
+    } else if (ref && ref.inputField && ref.inputField.current) {
       $item = ReactDOM.findDOMNode(ref.inputField.current);
-      if (typeof $item.value === 'string') {
-        // $item.value = $item.value.trim();
-        $item.value = $item.value;
+      if ($item && typeof $item.value === 'string') {
+        $item.value = $item.value.trim();
       }
     }
     return $item;
@@ -307,19 +308,16 @@ export default class ReactForm extends React.Component {
       // Publish errors, if any.
       this.emitter.emit('formValidation', errors);
     }
-    /* const data = this._collectFormData(this.props.data);
-     return; */
+
     // Only submit if there are no errors.
     if (errors.length < 1) {
       const { onSubmit } = this.props;
       if (onSubmit) {
         const data = this._collectFormData(this.props.data);
-
-        // return;
         onSubmit(data);
-        // } else {
-        //   const $form = ReactDOM.findDOMNode(this.form);
-        //   $form.submit();
+      } else {
+        const $form = ReactDOM.findDOMNode(this.form);
+        $form.submit();
       }
     }
   }
@@ -327,7 +325,7 @@ export default class ReactForm extends React.Component {
 
   validateForm() {
     const errors = [];
-    let data_items = this.props.data;// } else {
+    let data_items = this.props.data;
 
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
@@ -348,6 +346,11 @@ export default class ReactForm extends React.Component {
     });
 
     return errors;
+  }
+
+  getDataById(id) {
+    const { data } = this.props;
+    return data.find(x => x.id === id);
   }
 
   getInputElement(item) {
@@ -405,9 +408,38 @@ export default class ReactForm extends React.Component {
   }
 
 
+  getContainerElement(item, Element) {
+    const controls = item.childItems.map(x => (x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>));
+    return (<Element mutable={true} key={`form_${item.id}`} data={item} controls={controls} />);
+  }
+
   getSimpleElement(item) {
     const Element = FormElements[item.element];
     return <Element mutable={true} key={`form_${item.id}`} data={item}/>;
+  }
+
+  getCustomElement(item) {
+    if (!item.component || typeof item.component !== 'function') {
+      item.component = Registry.get(item.key);
+      if (!item.component) {
+        console.error(`${item.element} was not registered`);
+      }
+    }
+
+    const inputProps = item.forwardRef && {
+      handleChange: this.handleChange,
+      defaultValue: this._getDefaultValue(item),
+      ref: c => this.inputs[item.field_name] = c,
+    };
+    return (
+      <CustomElement
+        mutable={true}
+        read_only={this.props.read_only}
+        key={`form_${item.id}`}
+        data={item}
+        {...inputProps}
+      />
+    );
   }
 
   render() {
@@ -430,7 +462,7 @@ export default class ReactForm extends React.Component {
       }
     });
 
-    const items = data_items.map((item) => {
+    const items = data_items.filter(x => !x.parentId).map((item) => {
       if (this.state.somedata === null || this.state.somedata == {}) {
         return null;
       }
@@ -458,6 +490,14 @@ export default class ReactForm extends React.Component {
         case 'Tags':
         case 'Range':
           return this.getInputElement(item);
+        case 'CustomElement':
+          return this.getCustomElement(item);
+        case 'FourColumnRow':
+          return this.getContainerElement(item, FourColumnRow);
+        case 'ThreeColumnRow':
+          return this.getContainerElement(item, ThreeColumnRow);
+        case 'TwoColumnRow':
+          return this.getContainerElement(item, TwoColumnRow);
         case 'Signature':
           return (
             <Signature
@@ -548,17 +588,10 @@ export default class ReactForm extends React.Component {
 
     return (
       <div>
-        <FormValidator emitter={this.emitter}/>
-        <div className="react-form-builder-form">
-          <form
-            encType="multipart/form-data"
-            ref={(c) => (this.form = c)}
-            onChange={this.handleChange.bind(this)}
-            action={this.props.form_action}
-            onSubmit={this.handleSubmit.bind(this)}
-            method={this.props.form_method}>
-            {/* <label>this is for test preivew</label> */}
-            {this.props.authenticity_token && (
+        <FormValidator emitter={this.emitter} />
+        <div className='react-form-builder-form'>
+          <form encType='multipart/form-data' ref={c => this.form = c} action={this.props.form_action} onSubmit={this.handleSubmit.bind(this)} method={this.props.form_method}>
+            {this.props.authenticity_token &&
               <div style={formTokenStyle}>
                 <input name="utf8" type="hidden" value="&#x2713;"/>
                 <input

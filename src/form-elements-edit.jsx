@@ -60,8 +60,6 @@ export default class FormElementsEdit extends React.Component {
     // elemProperty could be content or label
     // targProperty could be value or checked
     const this_element = this.state.element;
-    // const this_tags= this.state.element.validationRule;
-    // console.log(this_tags);
     this_element[elemProperty] = e.target[targProperty];
     this_element.validationRule = this.state.tags;
     this.setState(
@@ -83,6 +81,7 @@ export default class FormElementsEdit extends React.Component {
     const html = draftToHtml(convertToRaw(editorContent.getCurrentContent()))
       .replace(/<p>/g, '')
       .replace(/<\/p>/g, '')
+      .replace(/&nbsp;/g, ' ')
       .replace(/(?:\r\n|\r|\n)/g, ' ');
     const this_element = this.state.element;
     this_element[property] = html;

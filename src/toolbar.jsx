@@ -7,11 +7,29 @@ import ToolbarItem from './toolbar-draggable-item';
 import ID from './UUID';
 import store from './stores/store';
 
+function isDefaultItem(item) {
+  const keys = Object.keys(item);
+  return keys.filter(x => x !== 'element' && x !== 'key').length === 0;
+}
+
+function buildItems(items, defaultItems) {
+  if (!items) {
+    return defaultItems;
+  }
+  return items.map(x => {
+    let found;
+    if (isDefaultItem(x)) {
+      found = defaultItems.find(y => (x.element || x.key) === (y.element || y.key));
+    }
+    return found || x;
+  });
+}
+
 export default class Toolbar extends React.Component {
   constructor(props) {
     super(props);
 
-    const items = this.props.items ? this.props.items : this._defaultItems();
+    const items = buildItems(props.items, this._defaultItems());
     this.state = {
       items,
     };
@@ -214,6 +232,30 @@ export default class Toolbar extends React.Component {
         field_name: 'text_area_',
       },
       {
+        key: 'TwoColumnRow',
+        canHaveAnswer: false,
+        name: 'Two Column Row',
+        label: '',
+        icon: 'fas fa-columns',
+        field_name: 'two_col_row_',
+      },
+      {
+        key: 'ThreeColumnRow',
+        canHaveAnswer: false,
+        name: 'Three Column Row',
+        label: '',
+        icon: 'fas fa-columns',
+        field_name: 'three_col_row_',
+      },
+      {
+        key: 'FourColumnRow',
+        canHaveAnswer: false,
+        name: 'Four Column Row',
+        label: '',
+        icon: 'fas fa-columns',
+        field_name: 'four_col_row_',
+      },
+      {
         key: 'Image',
         name: 'Image',
         label: '',
@@ -315,7 +357,14 @@ export default class Toolbar extends React.Component {
       elementOptions.showDescription = true;
     }
 
-
+    if (item.type === 'custom') {
+      elementOptions.key = item.key;
+      elementOptions.custom = true;
+      elementOptions.forwardRef = item.forwardRef;
+      elementOptions.props = item.props;
+      elementOptions.component = item.component || null;
+      elementOptions.custom_options = item.custom_options || [];
+    }
 
     if (item.static) {
       elementOptions.bold = false;
@@ -352,14 +401,19 @@ export default class Toolbar extends React.Component {
     elementOptions.canHavePageBreakBefore =
       item.canHavePageBreakBefore !== false;
     elementOptions.canHaveAlternateForm = item.canHaveAlternateForm !== false;
-    elementOptions.canHaveDisplayHorizontal =
-      item.canHaveDisplayHorizontal !== false;
+    elementOptions.canHaveDisplayHorizontal = item.canHaveDisplayHorizontal !== false;
+    if (elementOptions.canHaveDisplayHorizontal) {
+      elementOptions.inline = item.inline;
+    }
     if (item.key !== 'Table') {
-
       elementOptions.canHaveOptionCorrect = item.canHaveOptionCorrect !== false;
       elementOptions.canHaveOptionValue = item.canHaveOptionValue !== false;
     }
     elementOptions.canPopulateFromApi = item.canPopulateFromApi !== false;
+
+    if (item.class_name) {
+      elementOptions.class_name = item.class_name;
+    }
 
     if (item.key === 'Image') {
       elementOptions.src = item.src;
@@ -391,43 +445,26 @@ export default class Toolbar extends React.Component {
         elementOptions.element
       );
       elementOptions.rows = item.rows;
-      // elementOptions.rows = [
-      //   {
-      //     'Name': "shubham",
-      //     'Age': 22,
-      //     'key': `table_option_row_${ID.uuid()}`,
-      //     // text: "some dummy text",
-      //   },
-      //   {
-      //     'Name': "ram",
-      //     'Age': 15,
-      //     'key': `table_option_row_${ID.uuid()}`,
-      //     // text: "some dummy text",
-      //   },
-      // ]
     }
 
     if (item.defaultValue) {
       elementOptions.defaultValue = item.defaultValue;
     }
 
+    if (item.label) { elementOptions.label = item.label; }
+
     if (item.field_name) {
       elementOptions.field_name = item.field_name + ID.uuid();
-    }
-
-    if (item.label) {
-      elementOptions.label = item.label;
     }
 
     if (item.options) {
       if (item.options.length > 0) {
         elementOptions.options = item.options;
       } else {
-        elementOptions.options = Toolbar._defaultItemOptions(
-          elementOptions.element
-        );
+        elementOptions.options = Toolbar._defaultItemOptions(elementOptions.element);
       }
     }
+
     return elementOptions;
   }
 
@@ -438,7 +475,7 @@ export default class Toolbar extends React.Component {
 
   render() {
     return (
-      <div className="react-form-builder-toolbar float-right">
+      <div className="col-md-3 react-form-builder-toolbar float-right">
         <h4>Toolbox</h4>
         <ul>
           {this.state.items.map((item) => (
