@@ -243,7 +243,6 @@ export default class ReactForm extends React.Component {
   giveMeData(check = null) {
     let obj = {};
     this.props.data.map((dat) => {
-      dat.field_name = dat.field_name.replaceAll('-', '_');
       if (dat !== null) {
         let pair;
         const vala = this._collect(dat, check);
@@ -264,27 +263,27 @@ export default class ReactForm extends React.Component {
     for (const property in data) {
       if (event.target.name === property) {
         const xhr = new XMLHttpRequest();
-        const errId = `errror-message-${property}`
+        const errId = `errror-message-${property}`;
         const parent = event.target.parentElement;
         const errorElement = parent.querySelector(`#${errId}`);
-
-        xhr.open('POST', 'http://localhost:8186/api/validate', false);
+        const url = process.env.REACT_APP_VALIDATION_URL || 'http://localhost:8181/api/validate';
+        xhr.open('POST', `${url}`, false);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send(`formId=1&fieldId=${property}&value=${data[property]}`);
         if (xhr.status === 200) {
-          if(errorElement){
+          if (errorElement) {
             parent.removeChild(errorElement);
           }
         } else if (xhr.status === 412) {
           const response = JSON.parse(xhr.responseText);
           const error = response.data.errors[0];
-          if(errorElement){
+          if (errorElement) {
             errorElement.innerText = error;
-          }else {
+          } else {
             let errorMessage = document.createElement('span');
             errorMessage.style = ('color:red');
             errorMessage.className = 'text-danger';
-            errorMessage.id=errId
+            errorMessage.id = errId;
             errorMessage.innerText = error;
             parent.appendChild(errorMessage);
           }
@@ -372,7 +371,8 @@ export default class ReactForm extends React.Component {
       try {
         const getDataFromServer = () => {
           let xhr = new XMLHttpRequest();
-          xhr.open('GET', `http://localhost:8186/api/auto-populate?field=${item.populateKey}`, false);
+          const url = process.env.REACT_APP_POPULATE_URL || 'http://localhost:8181/api/populate';
+          xhr.open('GET', `${url}?field=${item.populateKey}`, false);
           xhr.setRequestHeader('Authorization', 'Bearer ');
           xhr.send(null);
           if (xhr.status === 200) {
@@ -556,8 +556,7 @@ export default class ReactForm extends React.Component {
             onChange={this.handleChange.bind(this)}
             action={this.props.form_action}
             onSubmit={this.handleSubmit.bind(this)}
-            method={this.props.form_method}
-          >
+            method={this.props.form_method}>
             {/* <label>this is for test preivew</label> */}
             {this.props.authenticity_token && (
               <div style={formTokenStyle}>
@@ -586,8 +585,7 @@ export default class ReactForm extends React.Component {
               {!this.props.hide_actions && this.props.back_action && (
                 <a
                   href={this.props.back_action}
-                  className="btn btn-default btn-cancel btn-big"
-                >
+                  className="btn btn-default btn-cancel btn-big">
                   {backName}
                 </a>
               )}
