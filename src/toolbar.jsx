@@ -300,6 +300,8 @@ export default class Toolbar extends React.Component {
     elementOptions.canHavePageBreakBefore = item.canHavePageBreakBefore !== false;
     elementOptions.canHaveAlternateForm = item.canHaveAlternateForm !== false;
     elementOptions.canHaveDisplayHorizontal = item.canHaveDisplayHorizontal !== false;
+    elementOptions.canHaveConditionals = item.canHaveConditionals !== true;
+
     if (elementOptions.canHaveDisplayHorizontal) {
       elementOptions.inline = item.inline;
     }
