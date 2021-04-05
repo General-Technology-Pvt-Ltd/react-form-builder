@@ -301,14 +301,12 @@ export default class Toolbar extends React.Component {
         href: 'http://www.example.com',
       },
       {
-        key: 'Download',
+        key: 'FileUpload',
         name: 'File Upload',
         icon: 'fas fa-file',
         static: true,
         content: 'Placeholder file name ...',
-        field_name: 'download_',
-        file_path: '',
-        _href: '',
+        field_name: 'fileupload_',
       },
       {
         key: 'Range',
@@ -424,11 +422,6 @@ export default class Toolbar extends React.Component {
       elementOptions.timeFormat = item.timeFormat;
       elementOptions.showTimeSelect = item.showTimeSelect;
       elementOptions.showTimeSelectOnly = item.showTimeSelectOnly;
-    }
-
-    if (item.key === 'Download') {
-      elementOptions._href = item._href;
-      elementOptions.file_path = item.file_path;
     }
 
     if (item.key === 'Range') {

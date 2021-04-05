@@ -15,7 +15,7 @@ const {
   Image,
   Checkboxes,
   Signature,
-  Download,
+  FileUpload,
   Camera,
   Table,
   Label,
@@ -105,7 +105,7 @@ export default class ReactForm extends React.Component {
       $item.value = ref.state.value;
     } else if (item.element === 'Camera') {
       $item.value = ref.state.img ? ref.state.img.replace('data:image/png;base64,', '') : '';
-    } else if (item.element === 'Download') {
+    } else if (item.element === 'FileUpload') {
       $item.value = ref.state.value;
     } else if (ref && ref.inputField && ref.inputField.current) {
       $item = ReactDOM.findDOMNode(ref.inputField.current);
@@ -204,7 +204,7 @@ export default class ReactForm extends React.Component {
       itemData.value = checked_options;
     } else if (item.element === 'Table') {
       itemData.value = item.rows;
-    } else if (item.element === 'Download') {
+    } else if (item.element === 'FileUpload') {
       itemData.value = this._getItemValue(item, ref).value;
     } else {
       if (!ref) return null;
@@ -536,9 +536,9 @@ export default class ReactForm extends React.Component {
               defaultValue={this._getDefaultValue(item)}
             />
           );
-        case 'Download':
+        case 'FileUpload':
           return (
-            <Download
+            <FileUpload
               download_path={this.props.download_path}
               handleChange={this.handleChange}
               read_only={this.props.read_only || item.readOnly}

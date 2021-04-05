@@ -625,7 +625,7 @@ class HyperLink extends React.Component {
   }
 }
 
-class Download extends React.Component {
+class FileUpload extends React.Component {
   constructor(props) {
     super(props);
     this.inputField = React.createRef();
@@ -636,20 +636,13 @@ class Download extends React.Component {
     };
   }
 
-  handleFileUpload = (e) => {
-    const server = process.env.REACT_APP_UPLOAD_SERVER || "http://localhost:8181/api/attachment";
-    var formData = new FormData();
-    const data = Array.from(e.target.files);
-    formData.append("myFile", data[0]);
-    Promise.all([
-      axios.post(server, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }),
-    ]).then((res) => {
-      this.setState({ value: res[0].data.path, fileInfo: res[0].data });
-    });
+  handleFileSelect = (e) => {
+    const { onFileSelect } = this.props;
+    if(onFileSelect) {
+      onFileSelect(e);
+    } else {
+      console.error('No file handler found.');
+    }
   };
 
   render() {
@@ -672,7 +665,7 @@ class Download extends React.Component {
         <ComponentHeader {...this.props} />
         <div className="form-group">
         <ComponentLabel {...this.props} />
-        <input onChange={this.handleFileUpload} {...props} />
+        <input onChange={this.handleFileSelect} {...props} />
         {props.file_path ? <div className="mt-2 ml-2"><h6>{this.state.fileInfo.originalname}</h6></div>: ""}
         </div>
       </div>
@@ -1087,7 +1080,7 @@ FormElements.Image = Image;
 FormElements.Rating = Rating;
 FormElements.Tags = Tags;
 FormElements.HyperLink = HyperLink;
-FormElements.Download = Download;
+FormElements.FileUpload = FileUpload;
 FormElements.Camera = Camera;
 FormElements.Range = Range;
 FormElements.Table = Table;
