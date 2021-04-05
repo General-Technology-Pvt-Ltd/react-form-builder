@@ -302,8 +302,9 @@ export default class ReactForm extends React.Component {
     e.preventDefault();
     const data = this._collectFormData(this.props.data);
     let errors = [];
+    const btnId = e.target.id;
 
-    if (!this.props.skip_validations) {
+    if (!this.props.skip_validations && btnId && btnId === 'formbuilder__submit') {
       errors = this.validateForm();
       // Publish errors, if any.
       this.emitter.emit('formValidation', errors);
@@ -311,10 +312,11 @@ export default class ReactForm extends React.Component {
 
     // Only submit if there are no errors.
     if (errors.length < 1) {
-      const { onSubmit } = this.props;
-      if (onSubmit) {
+      const { onSubmit, onSaveDraft } = this.props;
+      const submissionHandler = btnId === 'formbuilder__draft' ? onSaveDraft : onSubmit;
+      if (submissionHandler) {
         const data = this._collectFormData(this.props.data);
-        onSubmit(data);
+        submissionHandler(data);
       } else {
         const $form = ReactDOM.findDOMNode(this.form);
         $form.submit();
@@ -584,13 +586,16 @@ export default class ReactForm extends React.Component {
     const actionName = this.props.action_name
       ? this.props.action_name
       : 'Submit';
+    const draftActionName = this.props.draft_action_name
+      ? this.props.draft_action_name
+      : 'Save as draft';
     const backName = this.props.back_name ? this.props.back_name : 'Cancel';
 
     return (
       <div>
         <FormValidator emitter={this.emitter} />
         <div className='react-form-builder-form'>
-          <form encType='multipart/form-data' ref={c => this.form = c} action={this.props.form_action} onSubmit={this.handleSubmit.bind(this)} method={this.props.form_method}>
+          <form encType='multipart/form-data' ref={c => this.form = c} action={this.props.form_action} method={this.props.form_method}>
             {this.props.authenticity_token &&
               <div style={formTokenStyle}>
                 <input name="utf8" type="hidden" value="&#x2713;"/>
@@ -609,11 +614,22 @@ export default class ReactForm extends React.Component {
             {items}
             <div className="btn-toolbar">
               {!this.props.hide_actions && (
-                <input
-                  type="submit"
-                  className="btn btn-school btn-big"
-                  value={actionName}
-                />
+                <>
+                  <input
+                    id="formbuilder__submit"
+                    type="submit"
+                    onClick={this.handleSubmit.bind(this)}
+                    className="btn btn-school btn-big"
+                    value={actionName}
+                  />
+                  <input
+                    id="formbuilder__draft"
+                    type="submit"
+                    onClick={this.handleSubmit.bind(this)}
+                    className="btn btn-school btn-big"
+                    value={draftActionName}
+                  />
+                  </>
               )}
               {!this.props.hide_actions && this.props.back_action && (
                 <a
