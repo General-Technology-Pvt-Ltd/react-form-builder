@@ -305,7 +305,7 @@ export default class Toolbar extends React.Component {
         name: 'File Upload',
         icon: 'fas fa-file',
         static: true,
-        content: 'Placeholder file name ...',
+        label: 'Placeholder Label',
         field_name: 'fileupload_',
       },
       {

@@ -629,19 +629,14 @@ class FileUpload extends React.Component {
   constructor(props) {
     super(props);
     this.inputField = React.createRef();
-    this.state = {
-      value: "",
-      fileInfo: {},
-      loading: null,
-    };
   }
 
   handleFileSelect = (e) => {
     const { onFileSelect } = this.props;
     if(onFileSelect) {
-      onFileSelect(e);
+      onFileSelect(e, this.props);
     } else {
-      console.error('No file handler found.');
+      console.error("No file handler found.");
     }
   };
 
@@ -650,7 +645,6 @@ class FileUpload extends React.Component {
     props.type = "file";
     props.className = 'form-control';
     props.name = this.props.data.field_name;
-    props.file_path = this.state.value;
     let baseClasses = 'SortableItem rfb-item';
     if (this.props.data.pageBreakBefore) {
       baseClasses += ' alwaysbreak';
@@ -666,7 +660,6 @@ class FileUpload extends React.Component {
         <div className="form-group">
         <ComponentLabel {...this.props} />
         <input onChange={this.handleFileSelect} {...props} />
-        {props.file_path ? <div className="mt-2 ml-2"><h6>{this.state.fileInfo.originalname}</h6></div>: ""}
         </div>
       </div>
     );

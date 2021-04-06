@@ -105,8 +105,6 @@ export default class ReactForm extends React.Component {
       $item.value = ref.state.value;
     } else if (item.element === 'Camera') {
       $item.value = ref.state.img ? ref.state.img.replace('data:image/png;base64,', '') : '';
-    } else if (item.element === 'FileUpload') {
-      $item.value = ref.state.value;
     } else if (ref && ref.inputField && ref.inputField.current) {
       $item = ReactDOM.findDOMNode(ref.inputField.current);
       if ($item && typeof $item.value === 'string') {
@@ -204,8 +202,6 @@ export default class ReactForm extends React.Component {
       itemData.value = checked_options;
     } else if (item.element === 'Table') {
       itemData.value = item.rows;
-    } else if (item.element === 'FileUpload') {
-      itemData.value = this._getItemValue(item, ref).value;
     } else {
       if (!ref) return null;
       itemData.value = this._getItemValue(item, ref).value;
@@ -545,6 +541,7 @@ export default class ReactForm extends React.Component {
               mutable={true}
               key={`form_${item.id}`}
               data={item}
+              onFileSelect={this.props.onFileSelect ? this.props.onFileSelect : null}
               ref={(c) => (this.inputs[item.field_name] = c)}
             />
           );
