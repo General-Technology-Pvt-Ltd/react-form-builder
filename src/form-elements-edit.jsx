@@ -431,21 +431,11 @@ export default class FormElementsEdit extends React.Component {
       return <div className="form-group">
         <label className="" htmlFor="auto-populate-key">Auto Populate</label>
         <select onChange={this.editElementProp.bind(this, 'populateKey', 'value')} id="auto-populate-key" className="form-control">
-        <option value="">-----Select One Option-----</option>
-        <option value="account_number">By Account</option>
-        <option value="mobile_number">By Mobile</option>
-        <option value="username">By Username</option>
+        <option value="" selected disabled>Select auto populate field</option>
+        <option value="account_number">Account Number</option>
+        <option value="mobile_number">Mobile Number</option>
+        <option value="account_name">Account Name</option>
       </select>
-        {/*<select selectedOption={this_prefix_rule} id="auto-populate-key" className="form-control" onChange={this.editElementProp.bind(*/}
-        {/*  this,*/}
-        {/*  'populateKey',*/}
-        {/*  'selectedOption'*/}
-        {/*)}>*/}
-        {/*  <option selected disabled>Select data to populate</option>*/}
-        {/*  <option value="account_number">Account Number</option>*/}
-        {/*  <option value="account_name">Account Name</option>*/}
-        {/*  <option value="mobile_number">Mobile Number</option>*/}
-        {/*</select>*/}
       </div>;
     }
 

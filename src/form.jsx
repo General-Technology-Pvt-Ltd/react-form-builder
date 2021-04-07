@@ -369,26 +369,31 @@ export default class ReactForm extends React.Component {
   getAutoPopulateElement(item) {
     let autoCompleteValue;
     if (item.element === 'AutoPopulate') {
-      try {
-        const getDataFromServer = () => {
-          let xhr = new XMLHttpRequest();
-          const url = process.env.REACT_APP_POPULATE_URL || 'http://localhost:8181/api/populate';
-          xhr.open('GET', `${url}?field=${item.populateKey}`, false);
-          xhr.setRequestHeader('Authorization', 'Bearer ');
-          xhr.send(null);
-          if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            return response.data;
-          } else {
-            alert('failed to populate');
-          }
-        };
-
-        autoCompleteValue = getDataFromServer();
-        console.log(autoCompleteValue);
-      } catch (e) {
-        console.log('Failed to populate data');
+      if(this.props.hasOwnProperty('onAutoPopulateRender')){
+        autoCompleteValue = this.props.onAutoPopulateRender ? this.props.onAutoPopulateRender() : null
+      }else {
+        console.error("No autocomplete handler found.");
       }
+      // try {
+      //   const getDataFromServer = () => {
+      //     let xhr = new XMLHttpRequest();
+      //     const url = process.env.REACT_APP_POPULATE_URL || 'http://localhost:8181/api/populate';
+      //     xhr.open('GET', `${url}?field=${item.populateKey}`, false);
+      //     xhr.setRequestHeader('Authorization', 'Bearer ');
+      //     xhr.send(null);
+      //     if (xhr.status === 200) {
+      //       const response = JSON.parse(xhr.responseText);
+      //       return response.data;
+      //     } else {
+      //       alert('failed to populate');
+      //     }
+      //   };
+      //
+      //   autoCompleteValue = getDataFromServer();
+      //   console.log(autoCompleteValue);
+      // } catch (e) {
+      //   console.log('Failed to populate data');
+      // }
     }
 
     return (
