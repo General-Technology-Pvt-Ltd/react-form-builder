@@ -46,6 +46,7 @@ class ReactFormBuilder extends React.Component {
       showDescription: this.props.show_description,
     };
     if (this.props.toolbarItems) { toolbarProps.items = this.props.toolbarItems; }
+    if (this.props.autoPopulateItems) { toolbarProps.autoPopulateItems = this.props.autoPopulateItems; }
     return (
       <DndProvider backend={HTML5Backend}>
        <div>

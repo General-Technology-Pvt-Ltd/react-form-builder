@@ -210,7 +210,6 @@ export default class Toolbar extends React.Component {
         label: 'Placeholder Label',
         icon: 'fas fa-font',
         field_name: 'auto_populate_',
-        canReadOnly: true,
         canBeRequired: false,
         canHavePageBreakBefore: false,
         canEditFieldName: false,
@@ -274,7 +273,6 @@ export default class Toolbar extends React.Component {
       {
         key: 'DatePicker',
         canDefaultToday: true,
-        canReadOnly: true,
         dateFormat: 'MM/dd/yyyy',
         timeFormat: 'hh:mm aa',
         showTimeSelect: false,
@@ -286,7 +284,6 @@ export default class Toolbar extends React.Component {
       },
       {
         key: 'Signature',
-        canReadOnly: true,
         name: 'Signature',
         icon: 'fas fa-pen-square',
         label: 'Signature',
@@ -450,12 +447,19 @@ export default class Toolbar extends React.Component {
       elementOptions.field_name = item.field_name + ID.uuid();
     }
 
+    elementOptions.populateKey = item.populateKey ? item.populateKey : null;
+    elementOptions.allowEdit = item.allowEdit ? item.allowEdit : false;
+
     if (item.options) {
       if (item.options.length > 0) {
         elementOptions.options = item.options;
       } else {
         elementOptions.options = Toolbar._defaultItemOptions(elementOptions.element);
       }
+    }
+
+    if(elementOptions.element === 'AutoPopulate') {
+      elementOptions.autoPopulateItems = this.props.autoPopulateItems ? this.props.autoPopulateItems : [];
     }
 
     return elementOptions;

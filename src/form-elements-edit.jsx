@@ -11,6 +11,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import DynamicOptionList from './dynamic-option-list';
 import { get } from './stores/requests';
 import ID from './UUID';
+import AutoPopulate from './form-edit-elements/AutoPopulate';
 
 const toolbar = {
   options: ['inline', 'list', 'textAlign', 'fontSize', 'link', 'history'],
@@ -428,15 +429,13 @@ export default class FormElementsEdit extends React.Component {
     }
 
     function getAutoPopulateEditor() {
-      return <div className="form-group">
-        <label className="" htmlFor="auto-populate-key">Auto Populate</label>
-        <select onChange={this.editElementProp.bind(this, 'populateKey', 'value')} id="auto-populate-key" className="form-control">
-        <option value="" selected disabled>Select auto populate field</option>
-        <option value="account_number">Account Number</option>
-        <option value="mobile_number">Mobile Number</option>
-        <option value="account_name">Account Name</option>
-      </select>
-      </div>;
+      return <AutoPopulate
+        data={this.props.preview.state.data}
+        updateElement={this.props.updateElement}
+        preview={this.props.preview}
+        element={this.props.element}
+        key={this.props.element.key}
+      />;
     }
 
     function getRequiredEditor() {
@@ -889,7 +888,7 @@ export default class FormElementsEdit extends React.Component {
 
         {this.props.element.hasOwnProperty('label') && canBeRequired && canBeRequired === true && getRequiredEditor.call(this)}
 
-
+        {/* TODO: readOnly throwing error on integration. Currently removed canReadOnly on toolbar.jsx */}
         {this.props.element.hasOwnProperty('readOnly') && getReadOnlyEditor.call(this)}
         {this.props.element.hasOwnProperty('defaultToday') && getDefaultTodayEditor.call(this)}
         {this.props.element.hasOwnProperty('showTimeSelect') && getTimeSelectEditor.call(this)}

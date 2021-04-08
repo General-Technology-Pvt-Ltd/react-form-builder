@@ -11,11 +11,27 @@ require('./scss/application.scss');
 const url = '/api/formdata';
 const saveUrl = '/api/formdata';
 
+const populateItems = [
+  {
+    "label": "Account Number",
+    "key": "accountNumber",
+  },
+  {
+    "label": "Mobile Number",
+    "key": "mobileNumber",
+  },
+  {
+    "label": "Account Name",
+    "key": "accountName",
+  },
+]
+
 ReactDOM.render(
   <FormBuilder.ReactFormBuilder
     variables={variables}
     url={url}
     saveUrl={saveUrl}
+    autoPopulateItems={populateItems}
   />,
   document.getElementById('form-builder'),
 );
