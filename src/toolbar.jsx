@@ -301,7 +301,6 @@ export default class Toolbar extends React.Component {
         key: 'FileUpload',
         name: 'File Upload',
         icon: 'fas fa-file',
-        static: true,
         label: 'Placeholder Label',
         field_name: 'fileupload_',
       },
@@ -397,6 +396,8 @@ export default class Toolbar extends React.Component {
       item.canHavePageBreakBefore !== false;
     elementOptions.canHaveAlternateForm = item.canHaveAlternateForm !== false;
     elementOptions.canHaveDisplayHorizontal = item.canHaveDisplayHorizontal !== false;
+    elementOptions.canHaveValidation = item.canHaveValidation !== true;
+
     if (elementOptions.canHaveDisplayHorizontal) {
       elementOptions.inline = item.inline;
     }
@@ -460,6 +461,15 @@ export default class Toolbar extends React.Component {
 
     if(elementOptions.element === 'AutoPopulate') {
       elementOptions.autoPopulateItems = this.props.autoPopulateItems ? this.props.autoPopulateItems : [];
+    }
+
+    elementOptions.availableValidationRules = this.props.availableValidationRules ? this.props.availableValidationRules : [];
+
+    if (elementOptions.canHaveValidation) {
+      elementOptions.validationRules = [{
+        key: ID.uuid(),
+        rule: '0',
+      }];
     }
 
     return elementOptions;

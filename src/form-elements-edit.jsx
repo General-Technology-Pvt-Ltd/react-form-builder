@@ -12,6 +12,7 @@ import DynamicOptionList from './dynamic-option-list';
 import { get } from './stores/requests';
 import ID from './UUID';
 import AutoPopulate from './form-edit-elements/AutoPopulate';
+import Validations from './form-edit-elements/Validations';
 
 const toolbar = {
   options: ['inline', 'list', 'textAlign', 'fontSize', 'link', 'history'],
@@ -858,6 +859,15 @@ export default class FormElementsEdit extends React.Component {
       />;
     }
 
+    function getValidationEditor() {
+      return <Validations
+        data={this.props.preview.state.data}
+        updateElement={this.props.updateElement}
+        preview={this.props.preview}
+        element={this.props.element}
+        key={this.props.element.key}/>;
+    }
+
     return (
       <div>
         <div className="clearfix">
@@ -883,8 +893,6 @@ export default class FormElementsEdit extends React.Component {
         {this.props.element.hasOwnProperty('label') && canEditFieldName && canEditFieldName === true && getFieldNameEditor.call(this)}
 
         {getConditionalVisibilityEditor.call(this)}
-
-        {this.props.element.hasOwnProperty('shouldBeValidated') && getValidationRuleEditor.call(this)}
 
         {this.props.element.hasOwnProperty('label') && canBeRequired && canBeRequired === true && getRequiredEditor.call(this)}
 
@@ -926,6 +934,7 @@ export default class FormElementsEdit extends React.Component {
         this.props.element.hasOwnProperty('options') && getPopulateApiEditor.call(this)}
 
         {this.props.element.hasOwnProperty('options') && getDynamicOptionList.call(this)}
+        {this.props.element.canHaveValidation && getValidationEditor.call(this)}
       </div>
     );
   }
