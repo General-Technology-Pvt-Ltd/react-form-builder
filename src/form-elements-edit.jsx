@@ -14,6 +14,7 @@ import ID from './UUID';
 import AutoPopulate from './form-edit-elements/AutoPopulate';
 import Validations from './form-edit-elements/Validations';
 import Prefix from './form-edit-elements/Prefix';
+import DynamicDropdown from './form-edit-elements/DynamicDropdown';
 
 const toolbar = {
   options: ['inline', 'list', 'textAlign', 'fontSize', 'link', 'history'],
@@ -599,6 +600,15 @@ export default class FormElementsEdit extends React.Component {
         key={this.props.element.key}/>;
     }
 
+    function getDynamicDropdownEditor() {
+      return <DynamicDropdown
+        data={this.props.preview.state.data}
+        updateElement={this.props.updateElement}
+        preview={this.props.preview}
+        element={this.props.element}
+        key={this.props.element.key}/>;
+    }
+
     function getSignatureEditor() {
       return <div className="form-group">
         <label className="control-label" htmlFor="variableKey">
@@ -946,6 +956,7 @@ export default class FormElementsEdit extends React.Component {
         {this.props.element.hasOwnProperty('options') && getDynamicOptionList.call(this)}
         {this.props.element.canHaveValidation && getValidationEditor.call(this)}
         {this.props.element.hasOwnProperty('prefix') && getPrefixEditor.call(this)}
+        {this.props.element.hasOwnProperty('dropdownUrl') && getDynamicDropdownEditor.call(this)}
       </div>
     );
   }

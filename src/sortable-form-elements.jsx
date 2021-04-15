@@ -5,7 +5,7 @@ import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from './multi-column';
 import CustomElement from './form-elements/custom-element';
 
 const {
-  Header, Paragraph, Label, LineBreak, TextInput, PrefixedTextInput, AutoPopulate, NumberInput, TextArea, Dropdown, Checkboxes,
+  Header, Paragraph, Label, LineBreak, TextInput, PrefixedTextInput, AutoPopulate, NumberInput, TextArea, Dropdown, DynamicDropdown, Checkboxes,
   DatePicker, RadioButtons, Image, Rating, Tags, Signature, HyperLink, FileUpload, Camera, Range,Table
 } = BaseFormElements;
 
@@ -21,6 +21,7 @@ FormElements.AutoPopulate = SortableElement(AutoPopulate);
 FormElements.NumberInput = SortableElement(NumberInput);
 FormElements.TextArea = SortableElement(TextArea);
 FormElements.Dropdown = SortableElement(Dropdown);
+FormElements.DynamicDropdown = SortableElement(DynamicDropdown);
 FormElements.Signature = SortableElement(Signature);
 FormElements.Checkboxes = SortableElement(Checkboxes);
 FormElements.DatePicker = SortableElement(DatePicker);

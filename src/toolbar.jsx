@@ -168,6 +168,15 @@ export default class Toolbar extends React.Component {
         options: [],
       },
       {
+        key: 'DynamicDropdown',
+        canHaveAnswer: true,
+        name: 'Dynamic Dropdown',
+        icon: 'far fa-caret-square-down',
+        label: 'Placeholder Label',
+        field_name: 'dynamic_dropdown_',
+        dropdownUrl: 'https://6077da33e7f4f500171830ee.mockapi.io/AccountNumber',
+      },
+      {
         key: 'Tags',
         canHaveAnswer: true,
         name: 'Tags',
@@ -475,6 +484,10 @@ export default class Toolbar extends React.Component {
 
     if(elementOptions.element === 'PrefixedTextInput') {
       elementOptions.prefix = item.prefix ? item.prefix : '';
+    }
+
+    if(elementOptions.element === 'DynamicDropdown') {
+      elementOptions.dropdownUrl = item.dropdownUrl ? item.dropdownUrl : '';
     }
 
     elementOptions.availableValidationRules = this.props.availableValidationRules ? this.props.availableValidationRules : [];

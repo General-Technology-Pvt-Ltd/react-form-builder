@@ -10,10 +10,11 @@ import HeaderBar from './header-bar';
 import DatePicker from './date-picker';
 import ComponentHeader from './component-header';
 import ComponentLabel from './component-label';
-import PrefixedTextInput from './prefixed-text-input';
 import myxss from './myxss';
 
 import ID from './UUID';
+import DynamicDropDown from './dynamic-drop-down';
+import PrefixedTextInput from './prefixed-text-input';
 
 
 const FormElements = {};
@@ -1071,6 +1072,7 @@ FormElements.AutoPopulate = AutoPopulate;
 FormElements.NumberInput = NumberInput;
 FormElements.TextArea = TextArea;
 FormElements.Dropdown = Dropdown;
+FormElements.DynamicDropdown = DynamicDropDown;
 FormElements.Signature = Signature;
 FormElements.Checkboxes = Checkboxes;
 FormElements.DatePicker = DatePicker;

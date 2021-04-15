@@ -10,6 +10,7 @@ import FormElements from './form-elements';
 import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from './multi-column';
 import CustomElement from './form-elements/custom-element';
 import Registry from './stores/registry';
+import DynamicDropDown from './form-elements/dynamic-drop-down';
 
 const {
   Image,
@@ -375,6 +376,21 @@ export default class ReactForm extends React.Component {
           mutable={true}
           key={`form_${item.id}`}
           data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
+  getDynamicDropdownElement(item) {
+    return (
+      <>
+        <DynamicDropDown
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
         />
       </>
     );
@@ -440,12 +456,15 @@ export default class ReactForm extends React.Component {
 
   render() {
     let data_items = this.props.data;
+    const accessToken = this.props.accessToken ? this.props.accessToken : null;
 
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
     }
 
     data_items.forEach((item) => {
+      item.accessToken = accessToken ? accessToken : null;
+
       if (
         item &&
         item.readOnly &&
@@ -482,6 +501,8 @@ export default class ReactForm extends React.Component {
         case 'NumberInput':
         case 'TextArea':
         case 'Dropdown':
+        case 'DynamicDropdown':
+          return this.getDynamicDropdownElement(item);
         case 'DatePicker':
         case 'RadioButtons':
         case 'Rating':
