@@ -174,7 +174,6 @@ export default class Toolbar extends React.Component {
         icon: 'far fa-caret-square-down',
         label: 'Placeholder Label',
         field_name: 'dynamic_dropdown_',
-        dropdownUrl: 'https://6077da33e7f4f500171830ee.mockapi.io/AccountNumber',
       },
       {
         key: 'Tags',
