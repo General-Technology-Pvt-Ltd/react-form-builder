@@ -140,7 +140,7 @@ export default class Validations extends React.Component {
         <ul>
           {
             validationRules.map((rule, index) => {
-              const key = `edit_${rule.key}`;
+              const key = `edit_${rule.key}_${index}`;
               return (
                 <li className="clearfix" key={key}>
                   <div className="row">
