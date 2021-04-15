@@ -13,6 +13,7 @@ import { get } from './stores/requests';
 import ID from './UUID';
 import AutoPopulate from './form-edit-elements/AutoPopulate';
 import Validations from './form-edit-elements/Validations';
+import Prefix from './form-edit-elements/Prefix';
 
 const toolbar = {
   options: ['inline', 'list', 'textAlign', 'fontSize', 'link', 'history'],
@@ -589,6 +590,15 @@ export default class FormElementsEdit extends React.Component {
       </div>;
     }
 
+    function getPrefixEditor() {
+      return <Prefix
+        data={this.props.preview.state.data}
+        updateElement={this.props.updateElement}
+        preview={this.props.preview}
+        element={this.props.element}
+        key={this.props.element.key}/>;
+    }
+
     function getSignatureEditor() {
       return <div className="form-group">
         <label className="control-label" htmlFor="variableKey">
@@ -935,6 +945,7 @@ export default class FormElementsEdit extends React.Component {
 
         {this.props.element.hasOwnProperty('options') && getDynamicOptionList.call(this)}
         {this.props.element.canHaveValidation && getValidationEditor.call(this)}
+        {this.props.element.hasOwnProperty('prefix') && getPrefixEditor.call(this)}
       </div>
     );
   }

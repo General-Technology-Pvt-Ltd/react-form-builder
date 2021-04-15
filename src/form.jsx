@@ -20,6 +20,7 @@ const {
   Table,
   Label,
   AutoPopulate,
+  PrefixedTextInput
 } = FormElements;
 
 export default class ReactForm extends React.Component {
@@ -366,6 +367,19 @@ export default class ReactForm extends React.Component {
     );
   }
 
+  getPrefixedTextInputElement(item) {
+    return (
+      <>
+        <PrefixedTextInput
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+        />
+      </>
+    );
+  }
+
   getAutoPopulateElement(item) {
     let autoCompleteValue;
     if (item.element === 'AutoPopulate') {
@@ -461,6 +475,8 @@ export default class ReactForm extends React.Component {
       }
       switch (item.element) {
         case 'TextInput':
+        case 'PrefixedTextInput':
+          return this.getPrefixedTextInputElement(item);
         case 'AutoPopulate':
           return this.getAutoPopulateElement(item);
         case 'NumberInput':

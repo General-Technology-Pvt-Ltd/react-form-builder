@@ -204,6 +204,16 @@ export default class Toolbar extends React.Component {
         shouldBeValidated: true,
       },
       {
+        key: 'PrefixedTextInput',
+        canHaveAnswer: true,
+        name: 'Prefixed Text Input',
+        label: 'Placeholder Label',
+        icon: 'fas fa-font',
+        field_name: 'text_input_',
+        shouldBeValidated: true,
+        prefix: '',
+      },
+      {
         key: 'AutoPopulate',
         canHaveAnswer: true,
         name: 'Auto Populate',
@@ -461,6 +471,10 @@ export default class Toolbar extends React.Component {
 
     if(elementOptions.element === 'AutoPopulate') {
       elementOptions.autoPopulateItems = this.props.autoPopulateItems ? this.props.autoPopulateItems : [];
+    }
+
+    if(elementOptions.element === 'PrefixedTextInput') {
+      elementOptions.prefix = item.prefix ? item.prefix : '';
     }
 
     elementOptions.availableValidationRules = this.props.availableValidationRules ? this.props.availableValidationRules : [];

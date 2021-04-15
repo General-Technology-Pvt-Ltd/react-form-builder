@@ -10,9 +10,11 @@ import HeaderBar from './header-bar';
 import DatePicker from './date-picker';
 import ComponentHeader from './component-header';
 import ComponentLabel from './component-label';
+import PrefixedTextInput from './prefixed-text-input';
 import myxss from './myxss';
 
 import ID from './UUID';
+
 
 const FormElements = {};
 
@@ -143,6 +145,7 @@ class TextInput extends React.Component {
     );
   }
 }
+
 
 class AutoPopulate extends React.Component {
   constructor(props) {
@@ -1063,6 +1066,7 @@ FormElements.Paragraph = Paragraph;
 FormElements.Label = Label;
 FormElements.LineBreak = LineBreak;
 FormElements.TextInput = TextInput;
+FormElements.PrefixedTextInput = PrefixedTextInput;
 FormElements.AutoPopulate = AutoPopulate;
 FormElements.NumberInput = NumberInput;
 FormElements.TextArea = TextArea;
