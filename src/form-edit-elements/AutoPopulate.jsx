@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import ID from '../UUID';
 
 
 export default class AutoPopulate extends React.Component {
@@ -50,9 +51,10 @@ export default class AutoPopulate extends React.Component {
           <label className="" htmlFor="auto-populate-key">Auto Populate</label>
           <select value={this.state.populateKey} onChange={this.handleChange.bind(this)} id="auto-populate-key" className="form-control">
             <option value="0" disabled>Select auto populate field</option>
-            {this.state.populateItems && this.state.populateItems.map(item => {
+            {this.state.populateItems && this.state.populateItems.map((item, index) => {
+              const key = ID.uuid();
               return (
-                <option value={item.key}>{item.label}</option>
+                <option  key={`autopopulate-item-${key}`} value={item.key}>{item.label}</option>
               )
             })}
           </select>

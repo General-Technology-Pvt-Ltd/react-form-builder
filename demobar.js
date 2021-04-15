@@ -65,7 +65,7 @@ export default class Demobar extends React.Component {
 
   // eslint-disable-next-line no-unused-vars
   _onSubmit(data) {
-    // console.log('onSubmit', data);
+    console.log('onSubmit', data);
     // Place code to post json data to server here
   }
 
@@ -104,8 +104,10 @@ export default class Demobar extends React.Component {
                   action_name="Save"
                   form_action="/api/form"
                   form_method="POST"
+                  accessToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiYWNjb3VudE5hbWUiOiJDdXN0b21lciBOYW1lIiwiYWNjb3VudE51bWJlciI6IjExMTExMTExMTEiLCJtb2JpbGVOdW1iZXIiOiI5OTk5OTk5OTk5IiwiZW1haWwiOiJjdXN0b21lckBicGEuY29tIiwiaWF0IjoxNjE4NDc5ODIyLCJleHAiOjE2MTg0ODI4MjJ9.FlPyk88lzYyxT4FojyYlbzfAPSm_7NmCXmgH5bE3fMA"
+                  autoPopulateUrl="http://localhost:8181/api/auto-populate"
                   // skip_validations={true}
-                  // onSubmit={this._onSubmit}
+                  onSubmit={this._onSubmit}
                   variables={this.props.variables}
                   data={this.state.data} />
 

@@ -397,15 +397,6 @@ export default class ReactForm extends React.Component {
   }
 
   getAutoPopulateElement(item) {
-    let autoCompleteValue;
-    if (item.element === 'AutoPopulate') {
-      if(this.props.hasOwnProperty('onAutoPopulateRender')){
-        autoCompleteValue = this.props.onAutoPopulateRender ? this.props.onAutoPopulateRender(item.populateKey) : null
-      }else {
-        console.error("No autocomplete handler found.");
-      }
-    }
-
     return (
       <>
         <AutoPopulate
@@ -413,7 +404,6 @@ export default class ReactForm extends React.Component {
           mutable={true}
           key={`form_${item.id}`}
           data={item}
-          defaultValue={autoCompleteValue ? autoCompleteValue : null}
         />
       </>
     );
@@ -457,13 +447,14 @@ export default class ReactForm extends React.Component {
   render() {
     let data_items = this.props.data;
     const accessToken = this.props.accessToken ? this.props.accessToken : null;
-
+    const autoPopulateUrl = this.props.autoPopulateUrl ? this.props.autoPopulateUrl : null;
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
     }
 
     data_items.forEach((item) => {
       item.accessToken = accessToken ? accessToken : null;
+      item.autoPopulateUrl = autoPopulateUrl ? autoPopulateUrl : null;
 
       if (
         item &&
