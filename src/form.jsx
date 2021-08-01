@@ -485,11 +485,11 @@ export default class ReactForm extends React.Component {
       }
       switch (item.element) {
         case 'TextInput':
+        case 'NumberInput':
         case 'PrefixedTextInput':
           return this.getPrefixedTextInputElement(item);
         case 'AutoPopulate':
           return this.getAutoPopulateElement(item);
-        case 'NumberInput':
         case 'TextArea':
         case 'Dropdown':
         case 'DynamicDropdown':
