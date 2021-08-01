@@ -491,9 +491,9 @@ export default class ReactForm extends React.Component {
         case 'AutoPopulate':
           return this.getAutoPopulateElement(item);
         case 'TextArea':
-        case 'Dropdown':
         case 'DynamicDropdown':
           return this.getDynamicDropdownElement(item);
+        case 'Dropdown':
         case 'DatePicker':
         case 'RadioButtons':
         case 'Rating':
