@@ -631,13 +631,15 @@ export default class ReactForm extends React.Component {
                     className="btn btn-school btn-big"
                     value={actionName}
                   />
-                  <input
-                    id="formbuilder__draft"
-                    type="submit"
-                    onClick={this.handleSubmit.bind(this)}
-                    className="btn btn-school btn-big"
-                    value={draftActionName}
-                  />
+                  {this.props.draft_action_name && (
+                    <input
+                      id="formbuilder__draft"
+                      type="submit"
+                      onClick={this.handleSubmit.bind(this)}
+                      className="btn btn-school btn-big"
+                      value={draftActionName}
+                    />
+                  )}
                   </>
               )}
               {!this.props.hide_actions && this.props.back_action && (
