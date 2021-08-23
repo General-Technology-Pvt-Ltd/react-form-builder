@@ -237,7 +237,7 @@ class Dropdown extends React.Component {
     props.name = this.props.data.field_name;
 
     if (this.props.mutable) {
-      props.defaultValue = this.props.defaultValue;
+      props.defaultValue = this.props.defaultValue ? this.props.defaultValue : '';
       props.ref = this.inputField;
     }
 
@@ -256,12 +256,18 @@ class Dropdown extends React.Component {
         <div className="form-group">
           <ComponentLabel {...this.props} />
           <select {...props}>
+            <option value="" disabled>Select an option</option>
             {this.props.data.options.map((option) => {
               const this_key = `preview_${option.key}`;
               return <option value={option.value}
                              key={this_key}>{option.text}</option>;
             })}
           </select>
+          <span style={{ position: 'absolute', bottom: 37, right: 22 }} onClick={(e) => {
+            e.currentTarget.parentNode.querySelector('select').value = this.props.defaultValue ? this.props.defaultValue : '';
+          }}>
+            <i className="fa fa-times" />
+          </span>
         </div>
       </div>
     );

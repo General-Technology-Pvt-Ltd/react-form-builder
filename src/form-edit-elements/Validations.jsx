@@ -65,6 +65,15 @@ export default class Validations extends React.Component {
     this.props.updateElement.call(this.props.preview, element);
   }
 
+  resetRules() {
+    const { element } = this.state;
+    element.validationRules = [{
+      key: ID.uuid(),
+      rule: '0',
+    }];
+    this.props.updateElement.call(this.props.preview, element);
+  }
+
   ruleHasConstraint(index) {
     const rule = this.getRule(index);
     if (rule.length > 0) {
@@ -136,7 +145,10 @@ export default class Validations extends React.Component {
     const { validationRules } = this.props.element;
     return !this.state.element.static ? (
       <div className="dynamic-option-list">
-        <h6>Validation Rules</h6>
+        <h6>Validation Rules <span style={{cursor: 'pointer'}} onClick={() => {
+          this.resetRules();
+        }}><small>Remove all rules</small></span></h6>
+
         <ul>
           {
             validationRules.map((rule, index) => {
@@ -165,6 +177,11 @@ export default class Validations extends React.Component {
                           })
                         }
                       </select>
+                      <span style={{ position: 'absolute', bottom: 12, right: 36 }} onClick={(e) => {
+                        e.currentTarget.parentNode.querySelector('select').value = '0';
+                      }}>
+                        <i className="fa fa-times" />
+                      </span>
                     </div>
                     {
                       this.ruleHasConstraint(index) &&
@@ -181,7 +198,7 @@ export default class Validations extends React.Component {
                         </div>
                       )
                     }
-                    <div className="col-sm-3">
+                    <div className="col-sm-4">
                       <div className="dynamic-options-actions-buttons">
                         <button onClick={this.addRule.bind(this, index)}
                                 className="btn btn-success"><i
