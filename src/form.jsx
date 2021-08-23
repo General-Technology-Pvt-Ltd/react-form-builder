@@ -485,19 +485,27 @@ export default class ReactForm extends React.Component {
       }
       switch (item.element) {
         case 'TextInput':
+          return this.getSimpleElement(item);
         case 'NumberInput':
+          return this.getSimpleElement(item);
         case 'PrefixedTextInput':
           return this.getPrefixedTextInputElement(item);
         case 'AutoPopulate':
           return this.getAutoPopulateElement(item);
         case 'TextArea':
+          return this.getSimpleElement(item);
         case 'DynamicDropdown':
           return this.getDynamicDropdownElement(item);
         case 'Dropdown':
+          return this.getSimpleElement(item);
         case 'DatePicker':
+          return this.getSimpleElement(item);
         case 'RadioButtons':
+          return this.getSimpleElement(item);
         case 'Rating':
+          return this.getSimpleElement(item);
         case 'Tags':
+          return this.getSimpleElement(item);
         case 'Range':
           return this.getInputElement(item);
         case 'CustomElement':
@@ -581,8 +589,6 @@ export default class ReactForm extends React.Component {
               defaultValue={this._optionsDefaultValue(item)}
             />
           );
-
-
         default:
           return this.getSimpleElement(item);
       }
