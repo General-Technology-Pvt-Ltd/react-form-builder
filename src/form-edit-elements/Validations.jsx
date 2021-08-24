@@ -145,9 +145,10 @@ export default class Validations extends React.Component {
     const { validationRules } = this.props.element;
     return !this.state.element.static ? (
       <div className="dynamic-option-list">
-        <h6>Validation Rules <span style={{cursor: 'pointer'}} onClick={() => {
+        <h6>Validation Rules </h6>
+        <span  className="btn btn-sm btn-danger" style={{cursor: 'pointer'}} onClick={() => {
           this.resetRules();
-        }}><small>Remove all rules</small></span></h6>
+        }}><small>Remove all rules</small></span>
 
         <ul>
           {
@@ -156,7 +157,7 @@ export default class Validations extends React.Component {
               return (
                 <li className="clearfix" key={key}>
                   <div className="row">
-                    <div className="col-sm-4">
+                    <div className="col-sm-4 position-relative">
                       <select tabIndex={index + 1}
                               className="form-control"
                               style={{ width: '100%' }}
@@ -177,10 +178,21 @@ export default class Validations extends React.Component {
                           })
                         }
                       </select>
-                      <span style={{ position: 'absolute', bottom: 12, right: 36 }} onClick={(e) => {
+                      <span style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        right: 0,
+                        width: '32px',
+                        height: '100%',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                        backgroundColor: '#f5f5f5',
+                        textAlign: 'center',
+                        cursor: 'pointer'
+                      }} onClick={(e) => {
                         e.currentTarget.parentNode.querySelector('select').value = '0';
                       }}>
-                        <i className="fa fa-times" />
+                        <i className="fa fa-times" style={{lineHeight : '36px'}} />
                       </span>
                     </div>
                     {
@@ -198,7 +210,7 @@ export default class Validations extends React.Component {
                         </div>
                       )
                     }
-                    <div className="col-sm-4">
+                    <div className="col-sm-3">
                       <div className="dynamic-options-actions-buttons">
                         <button onClick={this.addRule.bind(this, index)}
                                 className="btn btn-success"><i

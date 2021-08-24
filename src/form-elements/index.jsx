@@ -263,11 +263,11 @@ class Dropdown extends React.Component {
                              key={this_key}>{option.text}</option>;
             })}
           </select>
-          <span style={{ position: 'absolute', bottom: 37, right: 22 }} onClick={(e) => {
-            e.currentTarget.parentNode.querySelector('select').value = this.props.defaultValue ? this.props.defaultValue : '';
-          }}>
-            <i className="fa fa-times" />
-          </span>
+          {/*<span style={{ position: 'absolute', bottom: 37, right: 22 }} onClick={(e) => {*/}
+          {/*  e.currentTarget.parentNode.querySelector('select').value = this.props.defaultValue ? this.props.defaultValue : '';*/}
+          {/*}}>*/}
+          {/*  <i className="fa fa-times" />*/}
+          {/*</span>*/}
         </div>
       </div>
     );
