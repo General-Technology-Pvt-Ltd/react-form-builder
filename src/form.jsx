@@ -598,8 +598,6 @@ export default class ReactForm extends React.Component {
               defaultValue={this._optionsDefaultValue(item)}
             />
           );
-
-
         default:
           return this.getSimpleElement(item);
       }

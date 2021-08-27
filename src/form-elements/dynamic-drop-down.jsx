@@ -38,7 +38,7 @@ class DynamicDropDown extends React.Component {
     props.name = this.props.data.field_name;
 
     if (this.props.mutable) {
-      props.defaultValue = this.props.defaultValue;
+      props.defaultValue = this.props.defaultValue ? this.props.defaultValue : '';
       props.ref = this.inputField;
     }
 
@@ -57,12 +57,15 @@ class DynamicDropDown extends React.Component {
         <div className="form-group">
           <ComponentLabel {...this.props} />
           {this.state.options.length > 0 && (
-            <select value={this.state.value} {...props} onChange={this.handleChange.bind(this)}>
-              {this.state.options.map((option, index) => {
-                return <option value={option.value}
-                               key={`dynamic_dropdown_${index}`}>{option.text}</option>;
-              })}
-            </select>
+            <>
+              <select value={this.state.value} {...props} onChange={this.handleChange.bind(this)}>
+                <option value="" disabled>Select an option</option>
+                {this.state.options.map((option, index) => {
+                  return <option value={option.value}
+                                 key={`dynamic_dropdown_${index}`}>{option.text}</option>;
+                })}
+              </select>
+            </>
           )}
         </div>
       </div>
