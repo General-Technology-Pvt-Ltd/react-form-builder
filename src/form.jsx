@@ -21,7 +21,8 @@ const {
   Table,
   Label,
   AutoPopulate,
-  PrefixedTextInput
+  PrefixedTextInput,
+  NumberInput
 } = FormElements;
 
 export default class ReactForm extends React.Component {
@@ -382,6 +383,21 @@ export default class ReactForm extends React.Component {
     );
   }
 
+
+  getNumberInputElement(item) {
+    return (
+      <>
+        <NumberInput
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
   getDynamicDropdownElement(item) {
     return (
       <>
@@ -484,8 +500,9 @@ export default class ReactForm extends React.Component {
         }
       }
       switch (item.element) {
-        case 'TextInput':
         case 'NumberInput':
+          return this.getNumberInputElement(item);
+        case 'TextInput':
         case 'PrefixedTextInput':
           return this.getPrefixedTextInputElement(item);
         case 'AutoPopulate':
