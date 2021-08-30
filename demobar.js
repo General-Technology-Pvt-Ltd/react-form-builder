@@ -106,8 +106,21 @@ export default class Demobar extends React.Component {
                   form_method="POST"
                   accessToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiYWNjb3VudE5hbWUiOiJDdXN0b21lciBOYW1lIiwiYWNjb3VudE51bWJlciI6IjExMTExMTExMTEiLCJtb2JpbGVOdW1iZXIiOiI5OTk5OTk5OTk5IiwiZW1haWwiOiJjdXN0b21lckBicGEuY29tIiwiaWF0IjoxNjE4NDc5ODIyLCJleHAiOjE2MTg0ODI4MjJ9.FlPyk88lzYyxT4FojyYlbzfAPSm_7NmCXmgH5bE3fMA"
                   autoPopulateUrl="http://localhost:8181/api/auto-populate"
-                  // skip_validations={true}
+                  // skip_validations={true}---
                   onSubmit={this._onSubmit}
+
+                  // Required for Toc
+                  // toc={true} *Required
+                  // tocText={"Terms & Conditions"} *Optional
+                  // tocButtonText={"View"} *Optional
+                  // tocHandleChange={(e) => {
+                  //   // Handle Toc checkbox toggle.
+                  // }} *Required
+                  // tocHandleView={(e) => {
+                  //   // Handle Toc view button click.
+                  // }} *Required
+
+
                   variables={this.props.variables}
                   data={this.state.data} />
 

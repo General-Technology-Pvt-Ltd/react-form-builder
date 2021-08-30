@@ -11,6 +11,7 @@ import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from './multi-column';
 import CustomElement from './form-elements/custom-element';
 import Registry from './stores/registry';
 import DynamicDropDown from './form-elements/dynamic-drop-down';
+import Toc from './toc';
 
 const {
   Image,
@@ -636,6 +637,11 @@ export default class ReactForm extends React.Component {
               </div>
             }
             {items}
+            {this.props.toc ? (
+              <>
+                <Toc text={this.props.tocText} buttonText={this.props.tocButtonText} handleChange={this.props.tocHandleChange} handleView={this.props.tocHandleView}/>
+              </>
+            ) : null}
             <div className="btn-toolbar">
               {!this.props.hide_actions && (
                 <>
