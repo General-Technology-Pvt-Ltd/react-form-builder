@@ -183,7 +183,7 @@ export default class ReactForm extends React.Component {
   }
 
   _collect(item, check = null) {
-    const itemData = { name: item.field_name };
+    const itemData = { name: item.field_name, label: item.label ? item.label : item.field_name };
     const ref = this.inputs[item.field_name];
     if (ref === undefined) {
       return null;
