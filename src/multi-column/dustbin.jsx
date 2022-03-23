@@ -1,7 +1,7 @@
-import React, { useImperativeHandle, Fragment } from 'react';
-import { DropTarget } from 'react-dnd';
-import FormElements from '../form-elements';
-import ItemTypes from '../ItemTypes';
+import React, { useImperativeHandle, Fragment } from "react";
+import { DropTarget } from "react-dnd";
+import FormElements from "../form-elements";
+import ItemTypes from "../ItemTypes";
 
 function getSimpleElement(item, props) {
   if (!item) return null;
@@ -15,13 +15,13 @@ function getSimpleElement(item, props) {
 
 function getStyle(backgroundColor) {
   return {
-    border: '1px solid rgba(0,0,0,0.2)',
-    minHeight: '2rem',
-    minWidth: '12rem',
-    width: '100%',
+    border: "1px solid rgba(0,0,0,0.2)",
+    minHeight: "2rem",
+    minWidth: "12rem",
+    width: "100%",
     backgroundColor,
     padding: 0,
-    float: 'left',
+    float: "left",
   };
 }
 
@@ -33,7 +33,7 @@ function isContainer(item) {
         return true;
       }
       if (data.field_name) {
-        return data.field_name.indexOf('_col_row') > -1;
+        return data.field_name.indexOf("_col_row") > -1;
       }
     }
   }
@@ -41,9 +41,19 @@ function isContainer(item) {
 }
 
 const Dustbin = React.forwardRef(
-  ({
-    greedy, isOver, isOverCurrent, connectDropTarget, items, col, getDataById, ...rest
-  }, ref) => {
+  (
+    {
+      greedy,
+      isOver,
+      isOverCurrent,
+      connectDropTarget,
+      items,
+      col,
+      getDataById,
+      ...rest
+    },
+    ref
+  ) => {
     const item = getDataById(items[col]);
     useImperativeHandle(
       ref,
@@ -53,41 +63,35 @@ const Dustbin = React.forwardRef(
           // console.log('onDrop', data);
         },
       }),
-      [],
+      []
     );
 
-    let backgroundColor = 'rgba(0, 0, 0, .03)';
+    let backgroundColor = "rgba(0, 0, 0, .03)";
 
     if (isOverCurrent || (isOver && greedy)) {
-      backgroundColor = 'darkgreen';
+      backgroundColor = "darkgreen";
     }
 
     const element = getSimpleElement(item, rest);
     // console.log('accepts, canDrop', accepts, canDrop);
     return connectDropTarget(
-      <div style={getStyle(backgroundColor)}>
-        {element}
-      </div>,
+      <div style={getStyle(backgroundColor)}>{element}</div>
     );
-  },
+  }
 );
 
 export default DropTarget(
   (props) => props.accepts,
   {
-    drop(
-      props,
-      monitor,
-      component,
-    ) {
+    drop(props, monitor, component) {
       if (!component) {
         return;
       }
 
       const item = monitor.getItem();
       if (!isContainer(item)) {
-        (component).onDrop(item);
-        if (item.data && typeof props.setAsChild === 'function') {
+        component.onDrop(item);
+        if (item.data && typeof props.setAsChild === "function") {
           const isNew = !item.data.id;
           const data = isNew ? item.onCreate(item.data) : item.data;
           props.setAsChild(props.data, data, props.col);
@@ -100,5 +104,5 @@ export default DropTarget(
     isOver: monitor.isOver(),
     isOverCurrent: monitor.isOver({ shallow: true }),
     canDrop: monitor.canDrop(),
-  }),
+  })
 )(Dustbin);
