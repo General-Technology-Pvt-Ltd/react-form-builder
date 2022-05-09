@@ -8,6 +8,7 @@ import ID from '../UUID';
 
 export default class Validations extends React.Component {
   constructor(props) {
+    // console.log(props);
     super(props);
     this.state = {
       element: this.props.element,

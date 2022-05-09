@@ -28,7 +28,6 @@ export default class Prefix extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     if (this.state.dirty) {
       this.state.element.dirty = true;
     }

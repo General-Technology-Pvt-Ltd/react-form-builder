@@ -20,8 +20,8 @@ class ReactFormBuilder extends React.Component {
       editElement: null,
     };
     this.editModeOn = this.editModeOn.bind(this);
+    // console.log(props.data,"props.data");
   }
-
   editModeOn(data, e) {
     e.preventDefault();
     e.stopPropagation();

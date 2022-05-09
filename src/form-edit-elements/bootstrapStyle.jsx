@@ -2,23 +2,19 @@
  * <Validations />
  */
 
-import React, { useState } from "react";
+import React from "react";
 import ID from "../UUID";
-import MultiSelect from "react-multi-select-component";
+// import MultiSelect from "react-multi-select-component";
 // import "./style.css";
+import Autocomplete from './Autocomplete'
 
 const BootstrapStyle = (props) => {
-  console.log(props);
-  const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry" },
-  ];
-
-  const [selected, setSelected] = useState([]);
-  return (
+  // console.log(props.element.bootstrapStylingRules,"props");
+   return (
     <>
-      <h1>Select Fruits</h1>
+      <Autocomplete
+        suggestions={props.element.bootstrapStylingRules}
+      />
       {/* <pre>{JSON.stringify(selected)}</pre> */}
       {/* <MultiSelect
         options={options}

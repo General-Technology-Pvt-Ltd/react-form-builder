@@ -245,7 +245,7 @@ export default class Toolbar extends React.Component {
       {
         key: "TextArea",
         canHaveAnswer: true,
-        name: "Multi-line Input",
+        name: "Text Area",
         label: "Placeholder Label",
         icon: "fas fa-text-height",
         field_name: "text_area_",

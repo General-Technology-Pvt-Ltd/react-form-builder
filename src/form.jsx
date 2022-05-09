@@ -30,6 +30,7 @@ const {
   AutoPopulate,
   PrefixedTextInput,
   NumberInput,
+  TextArea,
 } = FormElements;
 
 export default class ReactForm extends React.Component {
@@ -209,7 +210,7 @@ export default class ReactForm extends React.Component {
           if (check) {
             checked_options.push(option.value);
           } else {
-            checked_options.push(option.key);
+            checked_options.push(option.value);
           }
         }
       });
@@ -371,6 +372,7 @@ export default class ReactForm extends React.Component {
 
   getDataById(id) {
     const { data } = this.props;
+    console.log(data, "here is data");
     return data.find((x) => x.id === id);
   }
 
@@ -407,6 +409,20 @@ export default class ReactForm extends React.Component {
     return (
       <>
         <NumberInput
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
+  getTextAreaElement(item) {
+    return (
+      <>
+        <TextArea
           ref={(c) => (this.inputs[item.field_name] = c)}
           mutable={true}
           key={`form_${item.id}`}
@@ -539,6 +555,7 @@ export default class ReactForm extends React.Component {
           case "AutoPopulate":
             return this.getAutoPopulateElement(item);
           case "TextArea":
+            return this.getTextAreaElement(item);
           case "DynamicDropdown":
             return this.getDynamicDropdownElement(item);
           case "Dropdown":
