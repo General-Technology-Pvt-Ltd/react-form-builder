@@ -1,12 +1,12 @@
 {
-  "name": "shubham-form-builder",
-  "version": "1.0.1",
+  "name": "drag-and-drop-form-builder-2",
+  "version": "1.0.2",
   "description": "A complete form builder for react.",
   "main": "lib/index.js",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sushantwork/react-form-builder.git"
+    "url": "git+https://github.com/General-Technology-Pvt-Ltd/react-form-builder.git"
   },
   "files": [
     "lib",
