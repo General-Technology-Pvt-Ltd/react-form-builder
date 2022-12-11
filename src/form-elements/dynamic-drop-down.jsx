@@ -20,7 +20,12 @@ class DynamicDropDown extends React.Component {
       get(populateUrl, this.props.data.accessToken)
         .then((data) => {
           this.setState({
-            options: data,
+            options: data || [{text: 'Option one', value: 'one'}],
+          });
+        }).catch((err) => {
+          // Default Options in case of error
+          this.setState({
+            options: [{text: 'Option one', value: 'one'}],
           });
         });
     }

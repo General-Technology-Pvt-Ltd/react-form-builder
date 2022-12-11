@@ -224,6 +224,15 @@ export default class Toolbar extends React.Component {
         prefix: "",
       },
       {
+        key: "PopulateTextInput",
+        canHaveAnswer: true,
+        name: "Populate Text Input",
+        icon: "fas fa-font",
+        label: "Placeholder Label",
+        field_name: "populate_text_input_",
+        canBeRequired: false,
+      },
+      {
         key: "AutoPopulate",
         canHaveAnswer: true,
         name: "Auto Populate",
@@ -518,6 +527,11 @@ export default class Toolbar extends React.Component {
 
     if (elementOptions.element === "DynamicDropdown") {
       elementOptions.dropdownUrl = item.dropdownUrl ? item.dropdownUrl : "";
+    }
+
+    if (elementOptions.element === "PopulateTextInput") {
+      elementOptions.inputValueUrl = item.inputValueUrl ? item.inputValueUrl : "";
+      elementOptions.dynamicId = this.props.dynamicId ? this.props.dynamicId : "";
     }
 
     elementOptions.availableValidationRules = this.props

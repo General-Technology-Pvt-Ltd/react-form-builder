@@ -16,6 +16,7 @@ import Validations from "./form-edit-elements/Validations";
 import BootstrapStyle from "./form-edit-elements/bootstrapStyle";
 import Prefix from "./form-edit-elements/Prefix";
 import DynamicDropdown from "./form-edit-elements/DynamicDropdown";
+import PopulateTextInput from "./form-edit-elements/PopulateTextInput";
 
 const toolbar = {
   options: ["inline", "list", "textAlign", "fontSize", "link", "history"],
@@ -364,11 +365,11 @@ export default class FormElementsEdit extends React.Component {
           {
             <div className="form-group">
               <label className="" htmlFor="field_name">
-                Field Name (only alphabet, numbersand underscore. no spaces)
+                Field Name (only alphabet, numbers and underscore) - No spaces
               </label>
               <input
                 id="field_name"
-                placeholder="fieldname (only alphabet and numbers. no spaces)"
+                placeholder="Field Name (only alphabet, numbers and underscore) - No spaces"
                 className="form-control"
                 type="text"
                 value={this.props.element.field_name}
@@ -636,6 +637,18 @@ export default class FormElementsEdit extends React.Component {
     function getDynamicDropdownEditor() {
       return (
         <DynamicDropdown
+          data={this.props.preview.state.data}
+          updateElement={this.props.updateElement}
+          preview={this.props.preview}
+          element={this.props.element}
+          key={this.props.element.key}
+        />
+      );
+    }
+
+    function getPopulateTextInputEditor() {
+      return (
+        <PopulateTextInput
           data={this.props.preview.state.data}
           updateElement={this.props.updateElement}
           preview={this.props.preview}
@@ -1048,6 +1061,8 @@ export default class FormElementsEdit extends React.Component {
           getPrefixEditor.call(this)}
         {this.props.element.hasOwnProperty("dropdownUrl") &&
           getDynamicDropdownEditor.call(this)}
+        {this.props.element.hasOwnProperty("inputValueUrl") &&
+          getPopulateTextInputEditor.call(this)}
       </div>
     );
   }

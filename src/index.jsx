@@ -58,6 +58,9 @@ class ReactFormBuilder extends React.Component {
     if (this.props.bootstrapStylingRules) {
       toolbarProps.bootstrapStylingRules = this.props.bootstrapStylingRules;
     }
+    if (this.props.dynamicId) {
+      toolbarProps.dynamicId = this.props.dynamicId;
+    }
     return (
       <DndProvider backend={HTML5Backend}>
         <div>

@@ -31,6 +31,7 @@ const {
   PrefixedTextInput,
   NumberInput,
   TextArea,
+  PopulateTextInput
 } = FormElements;
 
 export default class ReactForm extends React.Component {
@@ -447,6 +448,20 @@ export default class ReactForm extends React.Component {
     );
   }
 
+  getPopulateTextInputElement(item) {
+    return (
+      <>
+        <PopulateTextInput
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
   getAutoPopulateElement(item) {
     return (
       <>
@@ -554,6 +569,8 @@ export default class ReactForm extends React.Component {
             return this.getPrefixedTextInputElement(item);
           case "AutoPopulate":
             return this.getAutoPopulateElement(item);
+          case "PopulateTextInput":
+            return this.getPopulateTextInputElement(item);
           case "TextArea":
             return this.getTextAreaElement(item);
           case "DynamicDropdown":

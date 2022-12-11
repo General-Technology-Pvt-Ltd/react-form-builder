@@ -18,6 +18,7 @@ const {
   TextInput,
   PrefixedTextInput,
   AutoPopulate,
+  PopulateTextInput,
   NumberInput,
   TextArea,
   Dropdown,
@@ -45,6 +46,7 @@ FormElements.LineBreak = SortableElement(LineBreak);
 FormElements.TextInput = SortableElement(TextInput);
 FormElements.PrefixedTextInput = SortableElement(PrefixedTextInput);
 FormElements.AutoPopulate = SortableElement(AutoPopulate);
+FormElements.PopulateTextInput = SortableElement(PopulateTextInput);
 FormElements.NumberInput = SortableElement(NumberInput);
 FormElements.TextArea = SortableElement(TextArea);
 FormElements.Dropdown = SortableElement(Dropdown);

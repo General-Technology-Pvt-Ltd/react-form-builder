@@ -16,6 +16,7 @@ import ID from "./UUID";
 import DynamicDropDown from "./dynamic-drop-down";
 import PrefixedTextInput from "./prefixed-text-input";
 import AutoPopulate from "../form-elements/autopopulate";
+import PopulateTextInput from "./populatetextinput"
 
 const FormElements = {};
 
@@ -1122,6 +1123,7 @@ FormElements.LineBreak = LineBreak;
 FormElements.TextInput = TextInput;
 FormElements.PrefixedTextInput = PrefixedTextInput;
 FormElements.AutoPopulate = AutoPopulate;
+FormElements.PopulateTextInput = PopulateTextInput;
 FormElements.NumberInput = NumberInput;
 FormElements.TextArea = TextArea;
 FormElements.Dropdown = Dropdown;
