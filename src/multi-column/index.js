@@ -1,9 +1,3 @@
-import {
-  ColumnRow,
-  OneColumnRow,
-  TwoColumnRow,
-  ThreeColumnRow,
-  FourColumnRow,
-} from "./MultiColumnRow";
+import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from "./MultiColumnRow";
 
-export { ColumnRow, OneColumnRow, TwoColumnRow, ThreeColumnRow, FourColumnRow };
+export { TwoColumnRow, ThreeColumnRow, FourColumnRow };

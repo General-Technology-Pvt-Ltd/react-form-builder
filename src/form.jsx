@@ -8,8 +8,6 @@ import { EventEmitter } from "fbemitter";
 import FormValidator from "./form-validator";
 import FormElements from "./form-elements";
 import {
-  ColumnRow,
-  OneColumnRow,
   TwoColumnRow,
   ThreeColumnRow,
   FourColumnRow,
@@ -590,10 +588,6 @@ export default class ReactForm extends React.Component {
             return this.getContainerElement(item, ThreeColumnRow);
           case "TwoColumnRow":
             return this.getContainerElement(item, TwoColumnRow);
-          case "OneColumnRow":
-            return this.getContainerElement(item, OneColumnRow);
-          case "ColumnRow":
-            return this.getContainerElement(item, ColumnRow);
           case "Signature":
             return (
               <Signature

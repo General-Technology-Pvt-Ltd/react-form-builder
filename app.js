@@ -1,14 +1,15 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import DemoBar from "./demobar";
 // eslint-disable-next-line no-unused-vars
 import FormBuilder from "./src/index";
 import * as variables from "./variables";
-import { createRoot } from 'react-dom/client';
+// import { createRoot } from 'react-dom/client';
 
-const container = document.getElementById('form-builder');
-const demobarContainer = document.getElementById('demo-bar');
-const root = createRoot(container); 
-const demobar = createRoot(demobarContainer); 
+// const container = document.getElementById('form-builder');
+// const demobarContainer = document.getElementById('demo-bar');
+// const root = createRoot(container);
+// const demobar = createRoot(demobarContainer);
 
 // Add our stylesheets for the demo.
 require("./scss/application.scss");
@@ -75,74 +76,74 @@ const availableValidationRules = [
 const BootstrapStylingRules = [
   {
     key: [
-      { label:"primary",value:"bg-primary" },
-      { label:"success",value:"bg-success" },
-      { label:"secondary",value:"bg-secondary" },
-      { label:"info",value:"bg-info" },
-      { label:"danger",value:"bg-danger" },
-      { label:"light",value:"bg-light" },
-      { label:"dark", value:"bg-dark" },
+      { label: "primary", value: "bg-primary" },
+      { label: "success", value: "bg-success" },
+      { label: "secondary", value: "bg-secondary" },
+      { label: "info", value: "bg-info" },
+      { label: "danger", value: "bg-danger" },
+      { label: "light", value: "bg-light" },
+      { label: "dark", value: "bg-dark" },
     ],
     title: "Background",
     hasConstraint: true,
   },
   {
-    key: [{ label:"Border",value:"border" }],
+    key: [{ label: "Border", value: "border" }],
     title: "Border",
     hasConstraint: true,
   },
   {
-    key: [{label:"Text",value:"text"}],
+    key: [{ label: "Text", value: "text" }],
     title: "Colors",
     hasConstraint: true,
   },
   {
-    key: [{label:"Inline",value:"d-inline"}],
+    key: [{ label: "Inline", value: "d-inline" }],
     title: "Display",
     hasConstraint: true,
   },
   {
-    key: [{label:"Flex",value:"d-flex"}],
+    key: [{ label: "Flex", value: "d-flex" }],
     title: "Flex",
     hasConstraint: true,
   },
   {
-    key: [{label:"Float",value:"float-start"}],
+    key: [{ label: "Float", value: "float-start" }],
     title: "Float",
     hasConstraint: true,
   },
   {
-    key: [{label:"User-Select-All",value:"user-select-all"}],
+    key: [{ label: "User-Select-All", value: "user-select-all" }],
     title: "Interactions",
     hasConstraint: true,
   },
   {
-    key: [{label:"opacity",value:"opacity"}],
+    key: [{ label: "opacity", value: "opacity" }],
     title: "Opacity",
     hasConstraint: true,
   },
   {
-    key:  [{label:"Auto",value:"overflow-auto"}],
+    key: [{ label: "Auto", value: "overflow-auto" }],
     title: "Overflow",
     hasConstraint: true,
   },
   {
-    key:  [{label:"position",value:"position"}],
+    key: [{ label: "position", value: "position" }],
     title: "Background",
     hasConstraint: true,
   },
   {
-    key: [{label:"shadow",value:"shadow"}],
+    key: [{ label: "shadow", value: "shadow" }],
     title: "Background",
     hasConstraint: true,
   },
   {
-    key: [{label:"Sizing",value:"sizing"}],
+    key: [{ label: "Sizing", value: "sizing" }],
     title: "Background",
     hasConstraint: true,
   },
   {
-    key: [{label:"Spacing",value:"spacing"}],
+    key: [{ label: "Spacing", value: "spacing" }],
     title: "Background",
     hasConstraint: true,
   },
@@ -157,13 +158,16 @@ const BootstrapStylingRules = [
     hasConstraint: true,
   },
   {
-    key: [{label:"visible",value:"visible"},{label:"invisible",value:"invisible"}],
+    key: [
+      { label: "visible", value: "visible" },
+      { label: "invisible", value: "invisible" },
+    ],
     title: "visible",
     hasConstraint: true,
   },
 ];
 
-root.render(
+ReactDOM.render(
   <FormBuilder.ReactFormBuilder
     variables={variables}
     url={url}
@@ -171,9 +175,11 @@ root.render(
     autoPopulateItems={populateItems}
     availableValidationRules={availableValidationRules}
     bootstrapStylingRules={BootstrapStylingRules}
-  />
+  />,
+  document.getElementById("form-builder")
 );
 
-demobar.render(
-  <DemoBar variables={variables} />
+ReactDOM.render(
+  <DemoBar variables={variables} />,
+  document.getElementById("demo-bar")
 );

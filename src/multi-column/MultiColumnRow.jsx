@@ -61,26 +61,6 @@ class MultiColumnRow extends React.Component {
   }
 }
 
-const ColumnRow = ({ data, class_name, ...rest }) => {
-  const className = class_name || "col";
-  if (!data.childItems) {
-    // eslint-disable-next-line no-param-reassign
-    data.childItems = [null];
-    data.isContainer = true;
-  }
-  return <MultiColumnRow {...rest} className={className} data={data} />;
-};
-
-const OneColumnRow = ({ data, class_name, ...rest }) => {
-  const className = class_name || "col-md-12";
-  if (!data.childItems) {
-    // eslint-disable-next-line no-param-reassign
-    data.childItems = [null];
-    data.isContainer = true;
-  }
-  return <MultiColumnRow {...rest} className={className} data={data} />;
-};
-
 const TwoColumnRow = ({ data, class_name, ...rest }) => {
   const className = class_name || "col-md-6";
   if (!data.childItems) {
@@ -111,4 +91,4 @@ const FourColumnRow = ({ data, class_name, ...rest }) => {
   return <MultiColumnRow {...rest} className={className} data={data} />;
 };
 
-export { ColumnRow, OneColumnRow, TwoColumnRow, ThreeColumnRow, FourColumnRow };
+export { TwoColumnRow, ThreeColumnRow, FourColumnRow };

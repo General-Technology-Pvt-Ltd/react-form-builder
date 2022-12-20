@@ -2,8 +2,6 @@ import SortableElement from "./sortable-element";
 import PlaceHolder from "./form-place-holder";
 import BaseFormElements from "./form-elements";
 import {
-  ColumnRow,
-  OneColumnRow,
   TwoColumnRow,
   ThreeColumnRow,
   FourColumnRow,
@@ -64,8 +62,6 @@ FormElements.Camera = SortableElement(Camera);
 FormElements.Range = SortableElement(Range);
 FormElements.PlaceHolder = SortableElement(PlaceHolder);
 FormElements.Table = SortableElement(Table);
-FormElements.ColumnRow = SortableElement(ColumnRow);
-FormElements.OneColumnRow = SortableElement(OneColumnRow);
 FormElements.TwoColumnRow = SortableElement(TwoColumnRow);
 FormElements.ThreeColumnRow = SortableElement(ThreeColumnRow);
 FormElements.FourColumnRow = SortableElement(FourColumnRow);

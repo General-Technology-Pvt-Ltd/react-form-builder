@@ -1,12 +1,12 @@
 {
-  "name": "drag-and-drop-form-builder-2",
-  "version": "1.0.3",
+  "name": "dynamic-formbuilder-react",
+  "version": "1.0.2",
   "description": "A complete form builder for react.",
   "main": "lib/index.js",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/General-Technology-Pvt-Ltd/react-form-builder.git"
+    "url": "git+https://github.com/aryanrb/react-form-builder.git"
   },
   "files": [
     "lib",
@@ -43,6 +43,7 @@
     "react-draft-wysiwyg": "~1.14.7",
     "react-multi-select-component": "^4.2.3",
     "react-select": "^3.2.0",
+    "node-sass": "npm:sass@^1.56.2",
     "react-signature-canvas": "^1.0.3",
     "react-textarea-autosize": "^7.1.2",
     "sass": "^1.50.1",
@@ -100,5 +101,6 @@
     "doc": "docs",
     "example": "examples",
     "lib": "lib"
-  }
+  },
+  "homepage": "https://github.com/aryanrb/react-form-builder#readme"
 }
