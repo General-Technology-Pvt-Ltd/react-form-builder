@@ -65,7 +65,7 @@ export default class Demobar extends React.Component {
 
   // eslint-disable-next-line no-unused-vars
   _onSubmit(data) {
-    // console.log('onSubmit', data);
+    console.log('onSubmit', data);
     // Place code to post json data to server here
   }
 
@@ -94,7 +94,7 @@ export default class Demobar extends React.Component {
 
         { this.state.previewVisible &&
           <div className={modalClass} role="dialog">
-            <div className="modal-dialog" role="document">
+            <div className="modal-dialog modal-lg" role="document">
               <div className="modal-content">
                 <ReactFormGenerator
                   download_path=""
@@ -104,8 +104,23 @@ export default class Demobar extends React.Component {
                   action_name="Save"
                   form_action="/api/form"
                   form_method="POST"
-                  // skip_validations={true}
-                  // onSubmit={this._onSubmit}
+                  accessToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiYWNjb3VudE5hbWUiOiJDdXN0b21lciBOYW1lIiwiYWNjb3VudE51bWJlciI6IjExMTExMTExMTEiLCJtb2JpbGVOdW1iZXIiOiI5OTk5OTk5OTk5IiwiZW1haWwiOiJjdXN0b21lckBicGEuY29tIiwiaWF0IjoxNjE4NDc5ODIyLCJleHAiOjE2MTg0ODI4MjJ9.FlPyk88lzYyxT4FojyYlbzfAPSm_7NmCXmgH5bE3fMA"
+                  autoPopulateUrl="http://localhost:8181/api/auto-populate"
+                  // skip_validations={true}---
+                  onSubmit={this._onSubmit}
+
+                  // Required for Toc
+                  // toc={true} *Required
+                  // tocText={"Terms & Conditions"} *Optional
+                  // tocButtonText={"View"} *Optional
+                  // tocHandleChange={(e) => {
+                  //   // Handle Toc checkbox toggle.
+                  // }} *Required
+                  // tocHandleView={(e) => {
+                  //   // Handle Toc view button click.
+                  // }} *Required
+
+
                   variables={this.props.variables}
                   data={this.state.data} />
 
@@ -119,7 +134,7 @@ export default class Demobar extends React.Component {
 
         { this.state.roPreviewVisible &&
           <div className={roModalClass}>
-            <div className="modal-dialog">
+            <div className="modal-dialog modal-lg">
               <div className="modal-content">
                 <ReactFormGenerator
                   download_path=""
@@ -144,8 +159,8 @@ export default class Demobar extends React.Component {
 
         { this.state.shortPreviewVisible &&
           <div className={shortModalClass}>
-            <div className="modal-dialog">
-              <div className="modal-content">
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content border border-light p-3 mb-4">
                 <ReactFormGenerator
                   download_path=""
                   back_action=""

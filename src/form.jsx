@@ -7,8 +7,30 @@ import ReactDOM from "react-dom";
 import { EventEmitter } from "fbemitter";
 import FormValidator from "./form-validator";
 import FormElements from "./form-elements";
+import {
+  TwoColumnRow,
+  ThreeColumnRow,
+  FourColumnRow,
+} from "./multi-column";
+import CustomElement from "./form-elements/custom-element";
+import Registry from "./stores/registry";
+import DynamicDropDown from "./form-elements/dynamic-drop-down";
+import Toc from "./toc";
 
-const { Image, Checkboxes, Signature, Download, Camera,Table } = FormElements;
+const {
+  Image,
+  Checkboxes,
+  Signature,
+  FileUpload,
+  Camera,
+  Table,
+  Label,
+  AutoPopulate,
+  PrefixedTextInput,
+  NumberInput,
+  TextArea,
+  PopulateTextInput
+} = FormElements;
 
 export default class ReactForm extends React.Component {
   form;
@@ -21,27 +43,28 @@ export default class ReactForm extends React.Component {
     super(props);
     this.answerData = this._convert(props.answer_data);
     this.emitter = new EventEmitter();
+    this.getDataById = this.getDataById.bind(this);
 
     this.state = {
       somedata: null,
-      reload: ''
-    }
+      reload: "",
+    };
   }
 
   componentDidMount() {
-    let data = this.giveMeData('update')
+    const data = this.giveMeData("update");
     this.setState({
       somedata: { ...this.state.somedata, ...data },
-      reload: ''
-    })
+      reload: "",
+    });
   }
 
   componentDidUpdate(nextProps) {
     if (nextProps.data !== this.props.data) {
-      let data = this.giveMeData('update')
+      const data = this.giveMeData("update");
       this.setState({
-        somedata: { ...this.state.somedata, ...data }
-      })
+        somedata: { ...this.state.somedata, ...data },
+      });
     }
   }
 
@@ -57,7 +80,7 @@ export default class ReactForm extends React.Component {
       });
       return result;
     }
-    return answers;
+    return answers || {};
   }
 
   _getDefaultValue(item) {
@@ -94,11 +117,10 @@ export default class ReactForm extends React.Component {
       $item.value = ref.state.img
         ? ref.state.img.replace("data:image/png;base64,", "")
         : "";
-    } else if (ref && ref.inputField) {
+    } else if (ref && ref.inputField && ref.inputField.current) {
       $item = ReactDOM.findDOMNode(ref.inputField.current);
-      if (typeof $item.value === "string") {
-        // $item.value = $item.value.trim();
-        $item.value = $item.value;
+      if ($item && typeof $item.value === "string") {
+        $item.value = $item.value.trim();
       }
     }
     return $item;
@@ -168,11 +190,14 @@ export default class ReactForm extends React.Component {
     return invalid;
   }
 
-  _collect(item, check=null) {
-    const itemData = { name: item.field_name };
+  _collect(item, check = null) {
+    const itemData = {
+      name: item.field_name,
+      label: item.label ? item.label : item.field_name,
+    };
     const ref = this.inputs[item.field_name];
-    if (ref == undefined) {
-      return null
+    if (ref === undefined) {
+      return null;
     }
     if (item.element === "Checkboxes" || item.element === "RadioButtons") {
       const checked_options = [];
@@ -181,22 +206,20 @@ export default class ReactForm extends React.Component {
           ref.options[`child_ref_${option.key}`]
         );
         if ($option.checked) {
-          if(check){
+          if (check) {
             checked_options.push(option.value);
           } else {
-            checked_options.push(option.key);
+            checked_options.push(option.value);
           }
         }
       });
       itemData.value = checked_options;
-    }
-    else if(item.element == "Table") {
-      itemData.value = item.rows
-    }
-    else {
-     if (!ref) return null;
+    } else if (item.element === "Table") {
+      itemData.value = item.rows;
+    } else {
+      if (!ref) return null;
       itemData.value = this._getItemValue(item, ref).value;
-   }
+    }
     return itemData;
   }
 
@@ -228,68 +251,102 @@ export default class ReactForm extends React.Component {
     }
   }
 
-  giveMeData(check=null) {
-    let obj = {}
+  giveMeData(check = null) {
+    let obj = {};
     this.props.data.map((dat) => {
-      dat.field_name = dat.field_name.replaceAll('-','_');
       if (dat !== null) {
-
-        let pair
-        let vala = this._collect(dat, check);
+        let pair;
+        const vala = this._collect(dat, check);
         if (vala != null) {
-          let fn = dat.field_name
-          let str = `pair = {${fn}: "${vala.value}"};`
-          eval(str)
+          dat.field_name = dat.field_name.replaceAll("-", "_");
+          const fn = dat.field_name;
+          const str = `pair = {${fn}: "${vala.value}"};`;
+          eval(str);
           obj = { ...obj, ...pair };
         }
       }
-
-    })
-    return obj
+    });
+    return obj;
   }
 
   handleChange(event) {
-    let data = this.giveMeData('update')
+    const data = this.giveMeData("update");
+    for (const property in data) {
+      if (event.target.name === property) {
+        const xhr = new XMLHttpRequest();
+        const errId = `errror-message-${property}`;
+        const parent = event.target.parentElement;
+        const errorElement = parent.querySelector(`#${errId}`);
+        const url =
+          process.env.REACT_APP_VALIDATION_URL ||
+          "http://localhost:8181/api/validate";
+        xhr.open("POST", `${url}`, false);
+        xhr.setRequestHeader(
+          "Content-Type",
+          "application/x-www-form-urlencoded"
+        );
+        xhr.send(`formId=1&fieldId=${property}&value=${data[property]}`);
+        if (xhr.status === 200) {
+          if (errorElement) {
+            parent.removeChild(errorElement);
+          }
+        } else if (xhr.status === 412) {
+          const response = JSON.parse(xhr.responseText);
+          const error = response.data.errors[0];
+          if (errorElement) {
+            errorElement.innerText = error;
+          } else {
+            let errorMessage = document.createElement("span");
+            errorMessage.style = "color:red";
+            errorMessage.className = "text-danger";
+            errorMessage.id = errId;
+            errorMessage.innerText = error;
+            parent.appendChild(errorMessage);
+          }
+        } else {
+          console.log("failed to validate");
+        }
+      }
+    }
     this.setState({
       somedata: { ...this.state.data, ...data },
-    })
+    });
   }
- 
+
   handleSubmit(e) {
     e.preventDefault();
     const data = this._collectFormData(this.props.data);
-    //this.createJSONpara(data)
     let errors = [];
+    const btnId = e.target.id;
 
-    if (!this.props.skip_validations) {
+    if (
+      !this.props.skip_validations &&
+      btnId &&
+      btnId === "formbuilder__submit"
+    ) {
       errors = this.validateForm();
       // Publish errors, if any.
       this.emitter.emit("formValidation", errors);
     }
-    /* const data = this._collectFormData(this.props.data);
-     return; */
+
     // Only submit if there are no errors.
     if (errors.length < 1) {
-      const { onSubmit } = this.props;
-      if (onSubmit) {
+      const { onSubmit, onSaveDraft } = this.props;
+      const submissionHandler =
+        btnId === "formbuilder__draft" ? onSaveDraft : onSubmit;
+      if (submissionHandler) {
         const data = this._collectFormData(this.props.data);
-
-        // return;
-        onSubmit(data);
-        // } else {
-        //   const $form = ReactDOM.findDOMNode(this.form);
-        //   $form.submit();
+        submissionHandler(data);
+      } else {
+        const $form = ReactDOM.findDOMNode(this.form);
+        $form.submit();
       }
     }
   }
 
-
-
   validateForm() {
     const errors = [];
-    let data_items = this.props.data;// } else {
-      //   const $form = ReactDOM.findDOMNode(this.form);
-      //   $form.submit();
+    let data_items = this.props.data;
 
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
@@ -312,6 +369,12 @@ export default class ReactForm extends React.Component {
     return errors;
   }
 
+  getDataById(id) {
+    const { data } = this.props;
+    console.log(data, "here is data");
+    return data.find((x) => x.id === id);
+  }
+
   getInputElement(item) {
     const Input = FormElements[item.element];
     return (
@@ -327,132 +390,283 @@ export default class ReactForm extends React.Component {
     );
   }
 
+  getPrefixedTextInputElement(item) {
+    return (
+      <>
+        <PrefixedTextInput
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
+  getNumberInputElement(item) {
+    return (
+      <>
+        <NumberInput
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
+  getTextAreaElement(item) {
+    return (
+      <>
+        <TextArea
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
+  getDynamicDropdownElement(item) {
+    return (
+      <>
+        <DynamicDropDown
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
+  getPopulateTextInputElement(item) {
+    return (
+      <>
+        <PopulateTextInput
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+          defaultValue={this._getDefaultValue(item)}
+        />
+      </>
+    );
+  }
+
+  getAutoPopulateElement(item) {
+    return (
+      <>
+        <AutoPopulate
+          ref={(c) => (this.inputs[item.field_name] = c)}
+          mutable={true}
+          key={`form_${item.id}`}
+          data={item}
+        />
+      </>
+    );
+  }
+
+  getContainerElement(item, Element) {
+    const controls = item.childItems.map((x) =>
+      x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>
+    );
+    console.log(controls);
+    return (
+      <Element
+        mutable={true}
+        key={`form_${item.id}`}
+        data={item}
+        controls={controls}
+      />
+    );
+  }
+
   getSimpleElement(item) {
     const Element = FormElements[item.element];
     return <Element mutable={true} key={`form_${item.id}`} data={item} />;
   }
 
+  getCustomElement(item) {
+    if (!item.component || typeof item.component !== "function") {
+      item.component = Registry.get(item.key);
+      if (!item.component) {
+        console.error(`${item.element} was not registered`);
+      }
+    }
+
+    const inputProps = item.forwardRef && {
+      handleChange: this.handleChange,
+      defaultValue: this._getDefaultValue(item),
+      ref: (c) => (this.inputs[item.field_name] = c),
+    };
+    return (
+      <CustomElement
+        mutable={true}
+        read_only={this.props.read_only}
+        key={`form_${item.id}`}
+        data={item}
+        {...inputProps}
+      />
+    );
+  }
+
   render() {
     let data_items = this.props.data;
-
+    const accessToken = this.props.accessToken ? this.props.accessToken : null;
+    const autoPopulateUrl = this.props.autoPopulateUrl
+      ? this.props.autoPopulateUrl
+      : null;
     if (this.props.display_short) {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
     }
 
     data_items.forEach((item) => {
+      item.accessToken = accessToken ? accessToken : null;
+      item.autoPopulateUrl = autoPopulateUrl ? autoPopulateUrl : null;
+
       if (
         item &&
         item.readOnly &&
         item.variableKey &&
         this.props.variables[item.variableKey]
       ) {
-        this.answerData[item.field_name] = this.props.variables[
-          item.variableKey
-        ];
+        this.answerData[item.field_name] =
+          this.props.variables[item.variableKey];
       }
     });
 
-    const items = data_items.map((item) => {
-      if (this.state.somedata === null || this.state.somedata == {}) {
-        return null
-      }
+    const items = data_items
+      .filter((x) => !x.parentId)
+      .map((item) => {
+        if (this.state.somedata === null || this.state.somedata == {}) {
+          return null;
+        }
 
-      let data = this.state.somedata
+        const data = this.state.somedata;
 
-      if (!item) return null
-      if (item.conditonalRule) {
-        if (item.conditonalRule != null || item.conditonalRule != undefined) {
-          if (!eval(item.conditonalRule)) {
-            return null
+        if (!item) return null;
+        if (item.conditonalRule) {
+          if (item.conditonalRule != null || item.conditonalRule != undefined) {
+            if (!eval(item.conditonalRule)) {
+              return null;
+            }
           }
         }
-      }
-      switch (item.element) {
-        case "TextInput":
-        case "NumberInput":
-        case "TextArea":
-        case "Dropdown":
-        case "DatePicker":
-        case "RadioButtons":
-        case "Rating":
-        case "Tags":
-        case "Range":
-          return this.getInputElement(item);
-        case "Signature":
-          return (
-            <Signature
-              ref={(c) => (this.inputs[item.field_name] = c)}
-              read_only={this.props.read_only || item.readOnly}
-              mutable={true}
-              key={`form_${item.id}`}
-              data={item}
-              defaultValue={this._getDefaultValue(item)}
-            />
-          );
-        case "Checkboxes":
-          return (
-            <Checkboxes
-              ref={(c) => (this.inputs[item.field_name] = c)}
-              read_only={this.props.read_only}
-              // handleChange={this.handleChange}
-              handleChange={this.handleChange}
-              mutable={true}
-              key={`form_${item.id}`}
-              data={item}
-              showdata={true}
-              defaultValue={this._optionsDefaultValue(item)}
-            />
-          );
-        case "Image":
-          return (
-            <Image
-              ref={(c) => (this.inputs[item.field_name] = c)}
-              handleChange={this.handleChange}
-              mutable={true}
-              key={`form_${item.id}`}
-              data={item}
-              defaultValue={this._getDefaultValue(item)}
-            />
-          );
-        case "Download":
-          return (
-            <Download
-              download_path={this.props.download_path}
-              mutable={true}
-              key={`form_${item.id}`}
-              data={item}
-            />
-          );
-        case "Camera":
-          return (
-            <Camera
-              ref={(c) => (this.inputs[item.field_name] = c)}
-              read_only={this.props.read_only || item.readOnly}
-              mutable={true}
-              key={`form_${item.id}`}
-              data={item}
-              defaultValue={this._getDefaultValue(item)}
-            />
-          );
+        switch (item.element) {
+          case "NumberInput":
+            return this.getNumberInputElement(item);
+          case "TextInput":
+          case "PrefixedTextInput":
+            return this.getPrefixedTextInputElement(item);
+          case "AutoPopulate":
+            return this.getAutoPopulateElement(item);
+          case "PopulateTextInput":
+            return this.getPopulateTextInputElement(item);
+          case "TextArea":
+            return this.getTextAreaElement(item);
+          case "DynamicDropdown":
+            return this.getDynamicDropdownElement(item);
+          case "Dropdown":
+          case "DatePicker":
+          case "RadioButtons":
+          case "Rating":
+          case "Tags":
+          case "Range":
+            return this.getInputElement(item);
+          case "CustomElement":
+            return this.getCustomElement(item);
+          case "FourColumnRow":
+            return this.getContainerElement(item, FourColumnRow);
+          case "ThreeColumnRow":
+            return this.getContainerElement(item, ThreeColumnRow);
+          case "TwoColumnRow":
+            return this.getContainerElement(item, TwoColumnRow);
+          case "Signature":
+            return (
+              <Signature
+                ref={(c) => (this.inputs[item.field_name] = c)}
+                read_only={this.props.read_only || item.readOnly}
+                mutable={true}
+                key={`form_${item.id}`}
+                data={item}
+                defaultValue={this._getDefaultValue(item)}
+              />
+            );
+          case "Checkboxes":
+            return (
+              <Checkboxes
+                ref={(c) => (this.inputs[item.field_name] = c)}
+                read_only={this.props.read_only}
+                // handleChange={this.handleChange}
+                handleChange={this.handleChange}
+                mutable={true}
+                key={`form_${item.id}`}
+                data={item}
+                showdata={true}
+                defaultValue={this._optionsDefaultValue(item)}
+              />
+            );
+          case "Image":
+            return (
+              <Image
+                ref={(c) => (this.inputs[item.field_name] = c)}
+                handleChange={this.handleChange}
+                mutable={true}
+                key={`form_${item.id}`}
+                data={item}
+                defaultValue={this._getDefaultValue(item)}
+              />
+            );
+          case "FileUpload":
+            return (
+              <FileUpload
+                download_path={this.props.download_path}
+                handleChange={this.handleChange}
+                read_only={this.props.read_only || item.readOnly}
+                mutable={true}
+                key={`form_${item.id}`}
+                data={item}
+                onFileSelect={
+                  this.props.onFileSelect ? this.props.onFileSelect : null
+                }
+                ref={(c) => (this.inputs[item.field_name] = c)}
+              />
+            );
+          case "Camera":
+            return (
+              <Camera
+                ref={(c) => (this.inputs[item.field_name] = c)}
+                read_only={this.props.read_only || item.readOnly}
+                mutable={true}
+                key={`form_${item.id}`}
+                data={item}
+                defaultValue={this._getDefaultValue(item)}
+              />
+            );
           case "Table":
-          return (
-            <Table
-              ref={(c) => (this.inputs[item.field_name] = c)}
-              read_only={this.props.read_only}
-              handleChange={this.handleChange}
-              mutable={true}
-              key={`form_${item.id}`}
-              data={item}
-              showdata={true}
-              defaultValue={this._optionsDefaultValue(item)}
-            />
-          );
-
-
-        default:
-          return this.getSimpleElement(item);
-      }
-    });
+            return (
+              <Table
+                ref={(c) => (this.inputs[item.field_name] = c)}
+                read_only={this.props.read_only || item.readOnly}
+                handleChange={this.handleChange}
+                mutable={true}
+                key={`form_${item.id}`}
+                data={item}
+                showdata={true}
+                defaultValue={this._optionsDefaultValue(item)}
+              />
+            );
+          default:
+            return this.getSimpleElement(item);
+        }
+      });
 
     const formTokenStyle = {
       display: "none",
@@ -461,6 +675,9 @@ export default class ReactForm extends React.Component {
     const actionName = this.props.action_name
       ? this.props.action_name
       : "Submit";
+    const draftActionName = this.props.draft_action_name
+      ? this.props.draft_action_name
+      : "Save as draft";
     const backName = this.props.back_name ? this.props.back_name : "Cancel";
 
     return (
@@ -470,12 +687,9 @@ export default class ReactForm extends React.Component {
           <form
             encType="multipart/form-data"
             ref={(c) => (this.form = c)}
-            onChange={this.handleChange.bind(this)}
             action={this.props.form_action}
-            onSubmit={this.handleSubmit.bind(this)}
             method={this.props.form_method}
           >
-            {/* <label>this is for test preivew</label> */}
             {this.props.authenticity_token && (
               <div style={formTokenStyle}>
                 <input name="utf8" type="hidden" value="&#x2713;" />
@@ -492,13 +706,36 @@ export default class ReactForm extends React.Component {
               </div>
             )}
             {items}
+            {this.props.toc ? (
+              <>
+                <Toc
+                  text={this.props.tocText}
+                  buttonText={this.props.tocButtonText}
+                  handleChange={this.props.tocHandleChange}
+                  handleView={this.props.tocHandleView}
+                />
+              </>
+            ) : null}
             <div className="btn-toolbar">
               {!this.props.hide_actions && (
-                <input
-                  type="submit"
-                  className="btn btn-school btn-big"
-                  value={actionName}
-                />
+                <>
+                  <input
+                    id="formbuilder__submit"
+                    type="submit"
+                    onClick={this.handleSubmit.bind(this)}
+                    className="btn btn-school btn-big"
+                    value={actionName}
+                  />
+                  {this.props.draft_action_name && (
+                    <input
+                      id="formbuilder__draft"
+                      type="submit"
+                      onClick={this.handleSubmit.bind(this)}
+                      className="btn btn-school btn-big"
+                      value={draftActionName}
+                    />
+                  )}
+                </>
               )}
               {!this.props.hide_actions && this.props.back_action && (
                 <a

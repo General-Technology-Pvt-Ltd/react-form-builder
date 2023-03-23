@@ -46,3 +46,6 @@ public/uploads/
 
 # bundles
 bundle.js
+
+package-lock.json
+yarn.lock

@@ -7,11 +7,31 @@ import ToolbarItem from "./toolbar-draggable-item";
 import ID from "./UUID";
 import store from "./stores/store";
 
+function isDefaultItem(item) {
+  const keys = Object.keys(item);
+  return keys.filter((x) => x !== "element" && x !== "key").length === 0;
+}
+
+function buildItems(items, defaultItems) {
+  if (!items) {
+    return defaultItems;
+  }
+  return items.map((x) => {
+    let found;
+    if (isDefaultItem(x)) {
+      found = defaultItems.find(
+        (y) => (x.element || x.key) === (y.element || y.key)
+      );
+    }
+    return found || x;
+  });
+}
+
 export default class Toolbar extends React.Component {
   constructor(props) {
     super(props);
 
-    const items = this.props.items ? this.props.items : this._defaultItems();
+    const items = buildItems(props.items, this._defaultItems());
     this.state = {
       items,
     };
@@ -150,6 +170,14 @@ export default class Toolbar extends React.Component {
         options: [],
       },
       {
+        key: "DynamicDropdown",
+        canHaveAnswer: true,
+        name: "Dynamic Dropdown",
+        icon: "far fa-caret-square-down",
+        label: "Placeholder Label",
+        field_name: "dynamic_dropdown_",
+      },
+      {
         key: "Tags",
         canHaveAnswer: true,
         name: "Tags",
@@ -183,6 +211,37 @@ export default class Toolbar extends React.Component {
         label: "Placeholder Label",
         icon: "fas fa-font",
         field_name: "text_input_",
+        shouldBeValidated: true,
+      },
+      {
+        key: "PrefixedTextInput",
+        canHaveAnswer: true,
+        name: "Prefixed Text Input",
+        label: "Placeholder Label",
+        icon: "fas fa-font",
+        field_name: "text_input_",
+        shouldBeValidated: true,
+        prefix: "",
+      },
+      {
+        key: "PopulateTextInput",
+        canHaveAnswer: true,
+        name: "Populate Text Input",
+        icon: "fas fa-font",
+        label: "Placeholder Label",
+        field_name: "populate_text_input_",
+        canBeRequired: false,
+      },
+      {
+        key: "AutoPopulate",
+        canHaveAnswer: true,
+        name: "Auto Populate",
+        label: "Placeholder Label",
+        icon: "fas fa-font",
+        field_name: "auto_populate_",
+        canBeRequired: false,
+        canHavePageBreakBefore: false,
+        canEditFieldName: false,
       },
       {
         key: "NumberInput",
@@ -195,10 +254,34 @@ export default class Toolbar extends React.Component {
       {
         key: "TextArea",
         canHaveAnswer: true,
-        name: "Multi-line Input",
+        name: "Text Area",
         label: "Placeholder Label",
         icon: "fas fa-text-height",
         field_name: "text_area_",
+      },
+      {
+        key: "TwoColumnRow",
+        canHaveAnswer: false,
+        name: "Two Column Row",
+        label: "",
+        icon: "fas fa-columns",
+        field_name: "two_col_row_",
+      },
+      {
+        key: "ThreeColumnRow",
+        canHaveAnswer: false,
+        name: "Three Column Row",
+        label: "",
+        icon: "fas fa-columns",
+        field_name: "three_col_row_",
+      },
+      {
+        key: "FourColumnRow",
+        canHaveAnswer: false,
+        name: "Four Column Row",
+        label: "",
+        icon: "fas fa-columns",
+        field_name: "four_col_row_",
       },
       {
         key: "Image",
@@ -219,7 +302,6 @@ export default class Toolbar extends React.Component {
       {
         key: "DatePicker",
         canDefaultToday: true,
-        canReadOnly: true,
         dateFormat: "MM/dd/yyyy",
         timeFormat: "hh:mm aa",
         showTimeSelect: false,
@@ -231,7 +313,6 @@ export default class Toolbar extends React.Component {
       },
       {
         key: "Signature",
-        canReadOnly: true,
         name: "Signature",
         icon: "fas fa-pen-square",
         label: "Signature",
@@ -246,14 +327,11 @@ export default class Toolbar extends React.Component {
         href: "http://www.example.com",
       },
       {
-        key: "Download",
-        name: "File Attachment",
+        key: "FileUpload",
+        name: "File Upload",
         icon: "fas fa-file",
-        static: true,
-        content: "Placeholder file name ...",
-        field_name: "download_",
-        file_path: "",
-        _href: "",
+        label: "Placeholder Label",
+        field_name: "fileupload_",
       },
       {
         key: "Range",
@@ -302,6 +380,15 @@ export default class Toolbar extends React.Component {
       elementOptions.showDescription = true;
     }
 
+    if (item.type === "custom") {
+      elementOptions.key = item.key;
+      elementOptions.custom = true;
+      elementOptions.forwardRef = item.forwardRef;
+      elementOptions.props = item.props;
+      elementOptions.component = item.component || null;
+      elementOptions.custom_options = item.custom_options || [];
+    }
+
     if (item.static) {
       elementOptions.bold = false;
       elementOptions.italic = false;
@@ -309,6 +396,10 @@ export default class Toolbar extends React.Component {
 
     if (item.canHaveAnswer) {
       elementOptions.canHaveAnswer = item.canHaveAnswer;
+    }
+
+    if (item.shouldBeValidated) {
+      elementOptions.shouldBeValidated = true;
     }
 
     if (item.canReadOnly) {
@@ -327,17 +418,34 @@ export default class Toolbar extends React.Component {
       elementOptions.href = item.href;
     }
 
+    elementOptions.canBeRequired = item.hasOwnProperty("canBeRequired")
+      ? item.canBeRequired
+      : true;
+    elementOptions.canEditFieldName = item.hasOwnProperty("canEditFieldName")
+      ? item.canEditFieldName
+      : true;
+
     elementOptions.canHavePageBreakBefore =
       item.canHavePageBreakBefore !== false;
     elementOptions.canHaveAlternateForm = item.canHaveAlternateForm !== false;
     elementOptions.canHaveDisplayHorizontal =
       item.canHaveDisplayHorizontal !== false;
-    if (item.key !== 'Table') {
+    elementOptions.canHaveValidation = item.canHaveValidation !== true;
 
+    elementOptions.canHaveBootstrap = item.canHaveBootstrap !== true;
+
+    if (elementOptions.canHaveDisplayHorizontal) {
+      elementOptions.inline = item.inline;
+    }
+    if (item.key !== "Table") {
       elementOptions.canHaveOptionCorrect = item.canHaveOptionCorrect !== false;
       elementOptions.canHaveOptionValue = item.canHaveOptionValue !== false;
     }
     elementOptions.canPopulateFromApi = item.canPopulateFromApi !== false;
+
+    if (item.class_name) {
+      elementOptions.class_name = item.class_name;
+    }
 
     if (item.key === "Image") {
       elementOptions.src = item.src;
@@ -348,11 +456,6 @@ export default class Toolbar extends React.Component {
       elementOptions.timeFormat = item.timeFormat;
       elementOptions.showTimeSelect = item.showTimeSelect;
       elementOptions.showTimeSelectOnly = item.showTimeSelectOnly;
-    }
-
-    if (item.key === "Download") {
-      elementOptions._href = item._href;
-      elementOptions.file_path = item.file_path;
     }
 
     if (item.key === "Range") {
@@ -367,35 +470,24 @@ export default class Toolbar extends React.Component {
     if (item.key === "Table") {
       elementOptions.options = Toolbar._defaultItemOptions(
         elementOptions.element
-      )
+      );
       elementOptions.rows = item.rows;
-      // elementOptions.rows = [
-      //   {
-      //     'Name': "shubham",
-      //     'Age': 22,
-      //     'key': `table_option_row_${ID.uuid()}`,
-      //     // text: "some dummy text",
-      //   },
-      //   {
-      //     'Name': "ram",
-      //     'Age': 15,
-      //     'key': `table_option_row_${ID.uuid()}`,
-      //     // text: "some dummy text",
-      //   },
-      // ]
     }
 
     if (item.defaultValue) {
       elementOptions.defaultValue = item.defaultValue;
     }
 
+    if (item.label) {
+      elementOptions.label = item.label;
+    }
+
     if (item.field_name) {
       elementOptions.field_name = item.field_name + ID.uuid();
     }
 
-    if (item.label) {
-      elementOptions.label = item.label;
-    }
+    elementOptions.populateKey = item.populateKey ? item.populateKey : null;
+    elementOptions.allowEdit = item.allowEdit ? item.allowEdit : false;
 
     if (item.options) {
       if (item.options.length > 0) {
@@ -405,6 +497,52 @@ export default class Toolbar extends React.Component {
           elementOptions.element
         );
       }
+    }
+
+    if (elementOptions.element === "AutoPopulate") {
+      elementOptions.autoPopulateItems = this.props.autoPopulateItems
+        ? this.props.autoPopulateItems
+        : [];
+    }
+
+    if (elementOptions.element === "PrefixedTextInput") {
+      elementOptions.prefix = item.prefix ? item.prefix : "";
+    }
+
+    if (elementOptions.element === "DynamicDropdown") {
+      elementOptions.dropdownUrl = item.dropdownUrl ? item.dropdownUrl : "";
+    }
+
+    if (elementOptions.element === "PopulateTextInput") {
+      elementOptions.inputValueUrl = item.inputValueUrl ? item.inputValueUrl : "";
+      elementOptions.dynamicId = this.props.dynamicId ? this.props.dynamicId : "";
+    }
+
+    elementOptions.availableValidationRules = this.props
+      .availableValidationRules
+      ? this.props.availableValidationRules
+      : [];
+
+    if (elementOptions.canHaveValidation) {
+      elementOptions.validationRules = [
+        {
+          key: ID.uuid(),
+          rule: "0",
+        },
+      ];
+    }
+
+    elementOptions.bootstrapStylingRules = this.props.bootstrapStylingRules
+      ? this.props.bootstrapStylingRules
+      : [];
+
+    if (elementOptions.canHaveBootstrap) {
+      elementOptions.bootstrapRules = [
+        {
+          key: ID.uuid(),
+          rule: "0",
+        },
+      ];
     }
 
     return elementOptions;
@@ -417,7 +555,7 @@ export default class Toolbar extends React.Component {
 
   render() {
     return (
-      <div className="react-form-builder-toolbar float-right">
+      <div className="col-md-3 react-form-builder-toolbar float-right">
         <h4>Toolbox</h4>
         <ul>
           {this.state.items.map((item) => (

@@ -14,7 +14,10 @@ export function post(url, data) {
   }).then(response => response);
 }
 
-export function get(url) {
+export function get(url, accessToken = null) {
+  if(accessToken) {
+    headers['Authorization'] = 'Bearer ' + accessToken
+  }
   return fetch(url, {
     method: 'GET',
     headers,
